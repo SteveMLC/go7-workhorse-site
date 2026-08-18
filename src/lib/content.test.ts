@@ -10,7 +10,7 @@ import { DESK_COMMANDS } from "./desk-commands.ts";
 import { DOCS, DOC_SLUGS, docBySlug, docNeighbours } from "./docs.ts";
 import { blocksToText, plainText } from "./llms.ts";
 import { FOOTER_LINKS, NAV_LINKS, PAGES, metadataFor, pageMetadata } from "./pages.ts";
-import { formatSize, parseLatestRelease } from "./release.ts";
+import { formatDate, formatSize, parseLatestRelease } from "./release.ts";
 import { FEATURE_LIST } from "./feature-list.ts";
 import { breadcrumbLd, docsIndexLd, faqLd, organizationLd, techArticleLd, webSiteLd } from "./schema.ts";
 import { PRODUCT_NAME, RELEASES_URL, REPO_URL, softwareApplicationJsonLd } from "./site.ts";
@@ -314,6 +314,17 @@ describe("latest release parser", () => {
     assert.equal(parseLatestRelease({}), null);
     assert.equal(parseLatestRelease({ tag_name: "v1.0.0", assets: [] }), null);
     assert.equal(parseLatestRelease({ assets: fixture.assets }), null);
+  });
+
+  it("prints the same date on the build machine and in the browser (UTC)", () => {
+    const before = process.env.TZ;
+    for (const zone of ["America/Los_Angeles", "Asia/Tokyo", "UTC"]) {
+      process.env.TZ = zone;
+      assert.equal(formatDate("2026-08-18T02:40:54Z"), "18 Aug 2026", zone);
+      assert.equal(formatDate("2026-08-18T23:59:59Z"), "18 Aug 2026", zone);
+    }
+    process.env.TZ = before;
+    assert.equal(formatDate("garbage"), "");
   });
 
   it("formats sizes in MB and GB", () => {
