@@ -326,7 +326,7 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 14px 16px;
-  margin: 0 0 20px;
+  margin: 0 0 22px;
 }
 
 .btn {
@@ -345,6 +345,11 @@ h1 {
     transform 0.32s var(--spring),
     box-shadow 0.32s var(--ease),
     background 0.2s var(--ease);
+}
+
+/* Same width for both, so the pair mirrors around the centre line. */
+.actions .btn {
+  min-width: 232px;
 }
 
 /* White pills: the only colour on the page is the horse's. */
@@ -373,6 +378,10 @@ h1 {
     0 6px 18px rgba(240, 36, 93, 0.2);
 }
 
+.repo {
+  margin: 0;
+}
+
 .more {
   display: inline-flex;
   align-items: center;
@@ -398,17 +407,11 @@ h1 {
   transform: translateX(3px);
 }
 
-.fine {
-  margin: 0;
-  font-size: 13.5px;
-  color: var(--text-tertiary);
-}
-
 /* One thread of light from the horse down to the desk. */
 .thread {
   width: 1px;
   height: clamp(96px, 14vh, 160px);
-  margin: 44px auto 0;
+  margin: 40px auto 0;
   background: linear-gradient(180deg, rgba(155, 92, 255, 0), var(--lilac) 45%, rgba(155, 92, 255, 0));
   box-shadow: 0 0 14px rgba(155, 92, 255, 0.55);
   opacity: 0.8;
@@ -993,10 +996,6 @@ h1 {
 
   .actions .btn {
     width: min(100%, 320px);
-  }
-
-  .more {
-    margin-top: 4px;
   }
 
   .thread {

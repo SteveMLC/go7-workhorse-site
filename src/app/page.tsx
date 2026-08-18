@@ -70,17 +70,16 @@ export default function HomePage() {
                 {item.label}
               </a>
             ))}
+          </div>
+
+          <p className="repo rise" style={{ ["--i" as string]: 6 }}>
             <a className="more" href={model.repoUrl}>
               {model.repoLabel}
               <span aria-hidden="true">›</span>
             </a>
-          </div>
-
-          <p className="fine rise" style={{ ["--i" as string]: 6 }}>
-            {model.noHostClaim}
           </p>
 
-          <div className="thread rise" style={{ ["--i" as string]: 8 }} aria-hidden="true" />
+          <div className="thread rise" style={{ ["--i" as string]: 7 }} aria-hidden="true" />
         </section>
 
         <section className="shot" aria-labelledby="claim">
