@@ -1,32 +1,24 @@
+import { Cta } from "@/components/Cta";
 import { DeskWindow } from "@/components/DeskWindow";
 import { DownloadLink } from "@/components/DownloadLink";
+import { JsonLd } from "@/components/JsonLd";
 import { Pointer } from "@/components/Pointer";
+import { SiteFooter } from "@/components/SiteFooter";
+import { SiteNav } from "@/components/SiteNav";
 import { Stage } from "@/components/Stage";
+import { HOME_FACTS } from "@/lib/content";
+import { PAGES } from "@/lib/pages";
+import { homeFactsLd, organizationLd, webSiteLd } from "@/lib/schema";
 import { homeModel } from "@/lib/site";
 
 export default function HomePage() {
   const model = homeModel();
-  const releases = model.downloads[0].href;
 
   return (
     <div className="page">
+      <JsonLd data={[organizationLd(), webSiteLd(), homeFactsLd()]} />
       <Pointer />
-
-      <header className="nav">
-        <div className="nav-inner">
-          <a className="brand" href="/">
-            <img src="/logo.png" alt="" width={26} height={26} />
-            <span>{model.productName}</span>
-          </a>
-          <nav className="nav-links" aria-label="Site">
-            <a href={model.repoUrl}>{model.repoLabel}</a>
-            <a href={releases}>Releases</a>
-            <a className="nav-cta" href={releases}>
-              Download
-            </a>
-          </nav>
-        </div>
-      </header>
+      <SiteNav current="/" />
 
       <main>
         <section className="hero">
@@ -95,16 +87,38 @@ export default function HomePage() {
             </div>
           </Stage>
         </section>
+
+        <section className="facts" aria-labelledby="facts-title">
+          <Stage>
+            <h2 id="facts-title" className="section-title">
+              What it does.
+            </h2>
+            <div className="tiles">
+              {HOME_FACTS.map((fact, index) => (
+                <article className="tile" key={fact.title} style={{ ["--i" as string]: index }}>
+                  <h3>{fact.title}</h3>
+                  <p>{fact.body}</p>
+                </article>
+              ))}
+            </div>
+            <p className="tiles-more">
+              <a className="more" href={PAGES.features.path}>
+                Everything it does<span aria-hidden="true">›</span>
+              </a>
+            </p>
+          </Stage>
+        </section>
+
+        <section className="outro" aria-labelledby="outro-title">
+          <h2 id="outro-title" className="outro-title">
+            {model.deskLine}
+          </h2>
+          <p className="outro-lead">Windows and macOS. Open source under MIT.</p>
+          <Cta linkHref={PAGES.docs.path} linkLabel="Read the docs" />
+        </section>
       </main>
 
-      <footer className="foot">
-        <span>{model.productName} · MIT · Go7 Studio</span>
-        <span className="foot-links">
-          <a href="https://go7studio.com">go7studio.com</a>
-          <span aria-hidden="true"> · </span>
-          <a href={model.agentSource}>llms.txt</a>
-        </span>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { FEATURE_LIST } from "./feature-list.ts";
+
 export const PRODUCT_NAME = "Go7 Workhorse";
 export const STUDIO_NAME = "Go7 Studio";
 export const STUDIO_URL = "https://go7studio.com";
@@ -9,6 +11,11 @@ export const REPO_URL = "https://github.com/go7studio/Go7-Workhorse";
 export const RELEASES_URL =
   "https://github.com/go7studio/Go7-Workhorse/releases/latest";
 export const SITE_ORIGIN = "https://go7workhorse.com";
+
+/** Stable @id values so every JSON-LD block on the site names the same three things. */
+export const APP_ID = `${SITE_ORIGIN}/#software`;
+export const ORG_ID = `${STUDIO_URL}/#organization`;
+export const SITE_ID = `${SITE_ORIGIN}/#website`;
 
 export type DownloadPlatform = "mac" | "windows";
 
@@ -57,36 +64,65 @@ export type HomeModel = ReturnType<typeof homeModel>;
 export type SoftwareApplicationJsonLd = {
   "@context": "https://schema.org";
   "@type": "SoftwareApplication";
+  "@id": string;
   name: string;
   description: string;
-  applicationCategory: "BusinessApplication";
+  applicationCategory: "DeveloperApplication";
   operatingSystem: string[];
   url: string;
   downloadUrl: string;
+  installUrl: string;
+  softwareHelp: { "@type": "CreativeWork"; url: string };
+  releaseNotes: string;
+  license: string;
+  isAccessibleForFree: true;
+  offers: { "@type": "Offer"; price: "0"; priceCurrency: "USD" };
+  featureList: string[];
+  screenshot: string;
+  image: string;
   sameAs: string[];
   author: {
     "@type": "Organization";
+    "@id": string;
     name: string;
     url: string;
   };
+  publisher: { "@id": string };
 };
 
+/**
+ * The one SoftwareApplication entity. Printed from the layout head, so every
+ * page carries it. Every field is a claim the public repo makes: MIT licence,
+ * installers on GitHub Releases, docs on this site, features from FEATURES.md.
+ */
 export function softwareApplicationJsonLd(): SoftwareApplicationJsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
+    "@id": APP_ID,
     name: PRODUCT_NAME,
     description: `${DESK_LINE} ${NO_HOST_CLAIM} Native desktop for Windows and macOS.`,
-    applicationCategory: "BusinessApplication",
+    applicationCategory: "DeveloperApplication",
     operatingSystem: ["Windows", "macOS"],
     url: SITE_ORIGIN,
     downloadUrl: RELEASES_URL,
-    sameAs: [REPO_URL],
+    installUrl: `${SITE_ORIGIN}/download`,
+    softwareHelp: { "@type": "CreativeWork", url: `${SITE_ORIGIN}/docs` },
+    releaseNotes: `${REPO_URL}/releases`,
+    license: `${REPO_URL}/blob/main/LICENSE`,
+    isAccessibleForFree: true,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    featureList: FEATURE_LIST,
+    screenshot: `${SITE_ORIGIN}/og.png`,
+    image: `${SITE_ORIGIN}/og.png`,
+    sameAs: [REPO_URL, `${REPO_URL}/blob/main/docs/FEATURES.md`],
     author: {
       "@type": "Organization",
+      "@id": ORG_ID,
       name: STUDIO_NAME,
       url: STUDIO_URL,
     },
+    publisher: { "@id": ORG_ID },
   };
 }
 

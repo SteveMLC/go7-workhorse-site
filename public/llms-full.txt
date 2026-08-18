@@ -40,6 +40,12 @@ Logins, context, tools, leftover, and sandboxes never pool across vendors. Each 
 - Pick a model per chat, or turn routing on and set a reserve.
 - Read leftover on Settings → Usage. A missing official meter stays unknown.
 
+## Pages on this site
+
+- Features: https://go7workhorse.com/features — Every ability Go7 Workhorse ships: agents, chats and projects, control, spend, work that outlives a turn, memory, extending it, settings, platforms.
+- Docs: https://go7workhorse.com/docs — Install Go7 Workhorse, connect the vendors you already pay for, read leftover, and see what stays on your machine. FAQ at https://go7workhorse.com/docs#faq. Data and privacy at https://go7workhorse.com/docs#privacy.
+- Download: https://go7workhorse.com/download — Go7 Workhorse for macOS (Apple silicon and Intel) and Windows. Installers come from GitHub Releases.
+
 ## Docs
 
 - README: https://github.com/go7studio/Go7-Workhorse/blob/main/README.md

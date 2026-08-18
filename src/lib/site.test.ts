@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
+import { FEATURE_LIST } from "./feature-list.ts";
 import {
   DESK_LINE,
   NO_HOST_CLAIM,
@@ -82,19 +83,33 @@ describe("softwareApplicationJsonLd", () => {
     assert.deepEqual(softwareApplicationJsonLd(), {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
+      "@id": `${SITE_ORIGIN}/#software`,
       name: PRODUCT_NAME,
       description: `${DESK_LINE} ${NO_HOST_CLAIM} Native desktop for Windows and macOS.`,
-      applicationCategory: "BusinessApplication",
+      applicationCategory: "DeveloperApplication",
       operatingSystem: ["Windows", "macOS"],
       url: SITE_ORIGIN,
       downloadUrl: RELEASES_URL,
-      sameAs: [REPO_URL],
+      installUrl: `${SITE_ORIGIN}/download`,
+      softwareHelp: { "@type": "CreativeWork", url: `${SITE_ORIGIN}/docs` },
+      releaseNotes: `${REPO_URL}/releases`,
+      license: `${REPO_URL}/blob/main/LICENSE`,
+      isAccessibleForFree: true,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      featureList: FEATURE_LIST,
+      screenshot: `${SITE_ORIGIN}/og.png`,
+      image: `${SITE_ORIGIN}/og.png`,
+      sameAs: [REPO_URL, `${REPO_URL}/blob/main/docs/FEATURES.md`],
       author: {
         "@type": "Organization",
+        "@id": `${STUDIO_URL}/#organization`,
         name: STUDIO_NAME,
         url: STUDIO_URL,
       },
+      publisher: { "@id": `${STUDIO_URL}/#organization` },
     });
+    assert.ok(FEATURE_LIST.length >= 10);
+    for (const line of FEATURE_LIST) assert.doesNotMatch(line, /good fit|SuperGrok Heavy/);
   });
 
   it("serializes a safe JSON-LD payload for the document head", () => {

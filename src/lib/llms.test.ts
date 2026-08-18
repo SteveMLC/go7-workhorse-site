@@ -4,6 +4,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { agentAudience, agentGuide, agentGuideFull } from "./llms.ts";
+import { FOOTER_LINKS } from "./pages.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -40,6 +41,11 @@ describe("human page stays a door", () => {
     assert.doesNotMatch(page, /not a fit/i);
     assert.doesNotMatch(page, /model\.fit/);
     assert.doesNotMatch(page, /model\.notFit/);
-    assert.match(page, /llms\.txt/);
+  });
+
+  it("links llms.txt from the footer of every page", () => {
+    assert.ok(FOOTER_LINKS.some((link) => link.href === "/llms.txt"));
+    const footer = readFileSync(join(here, "../components/SiteFooter.tsx"), "utf8");
+    assert.match(footer, /FOOTER_LINKS/);
   });
 });

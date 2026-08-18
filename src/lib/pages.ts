@@ -1,0 +1,96 @@
+import type { Metadata } from "next";
+import { DESK_LINE, PRODUCT_NAME, RELEASES_URL, REPO_URL, SITE_ORIGIN } from "./site.ts";
+
+/** Every human page on the site. Add here, and the nav, footer, sitemap and llms.txt follow. */
+export const PAGES = {
+  home: { path: "/", label: "Home", title: PRODUCT_NAME, description: DESK_LINE },
+  features: {
+    path: "/features",
+    label: "Features",
+    title: "Everything the desk does",
+    description:
+      "Every ability Go7 Workhorse ships: agents, chats and projects, control, spend, work that outlives a turn, memory, extending it, settings, platforms.",
+  },
+  docs: {
+    path: "/docs",
+    label: "Docs",
+    title: "Docs",
+    description:
+      "Install Go7 Workhorse, connect the vendors you already pay for, read leftover, and see what stays on your machine.",
+  },
+  download: {
+    path: "/download",
+    label: "Download",
+    title: "Download",
+    description:
+      "Go7 Workhorse for macOS (Apple silicon and Intel) and Windows. Installers come from GitHub Releases.",
+  },
+} as const;
+
+export type PageKey = keyof typeof PAGES;
+
+export const GO7STUDIO_URL = "https://go7studio.com";
+export const ISSUES_URL = `${REPO_URL}/issues`;
+export const LICENSE_URL = `${REPO_URL}/blob/main/LICENSE`;
+export const README_URL = `${REPO_URL}/blob/main/README.md`;
+export const FEATURES_MD_URL = `${REPO_URL}/blob/main/docs/FEATURES.md`;
+export const CONTRIBUTING_URL = `${REPO_URL}/blob/main/CONTRIBUTING.md`;
+export const RELEASES_INDEX_URL = `${REPO_URL}/releases`;
+export const MAC_INSTALL_SCRIPT =
+  "curl -fsSL https://raw.githubusercontent.com/go7studio/Go7-Workhorse/main/scripts/install-mac.sh | bash";
+
+/** Text links in the top bar, in order. The Download pill is added by the nav itself. */
+export const NAV_LINKS = [
+  { href: PAGES.features.path, label: PAGES.features.label },
+  { href: PAGES.docs.path, label: PAGES.docs.label },
+  { href: REPO_URL, label: "Public repo" },
+] as const;
+
+export const FOOTER_LINKS = [
+  { href: PAGES.features.path, label: PAGES.features.label },
+  { href: PAGES.docs.path, label: PAGES.docs.label },
+  { href: PAGES.download.path, label: PAGES.download.label },
+  { href: RELEASES_INDEX_URL, label: "Releases" },
+  { href: REPO_URL, label: "Public repo" },
+  { href: GO7STUDIO_URL, label: "go7studio.com" },
+  { href: "/llms.txt", label: "llms.txt" },
+] as const;
+
+export function absoluteUrl(path: string): string {
+  return path.startsWith("http") ? path : `${SITE_ORIGIN}${path}`;
+}
+
+/** Metadata for a subpage. Re-states the alternates so the llms.txt links survive the merge. */
+export function pageMetadata(key: Exclude<PageKey, "home">): Metadata {
+  const page = PAGES[key];
+  const title = `${page.title} — ${PRODUCT_NAME}`;
+  return {
+    title,
+    description: page.description,
+    alternates: {
+      canonical: page.path,
+      types: {
+        "text/plain": [
+          { url: "/llms.txt", title: "LLM source" },
+          { url: "/llms-full.txt", title: "LLM full brief" },
+        ],
+      },
+    },
+    openGraph: {
+      title,
+      description: page.description,
+      url: page.path,
+      siteName: PRODUCT_NAME,
+      images: [{ url: "/og.png", width: 1280, height: 640, alt: PRODUCT_NAME }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: page.description,
+      images: ["/og.png"],
+    },
+  };
+}
+
+export { RELEASES_URL };

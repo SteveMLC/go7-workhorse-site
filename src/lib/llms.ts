@@ -1,3 +1,4 @@
+import { PAGES } from "./pages.ts";
 import {
   DESK_LINE,
   NO_HOST_CLAIM,
@@ -65,6 +66,12 @@ Logins, context, tools, leftover, and sandboxes never pool across vendors. Each 
 - Open the desk. Connect the vendors they already pay for.
 - Pick a model per chat, or turn routing on and set a reserve.
 - Read leftover on Settings → Usage. A missing official meter stays unknown.
+
+## Pages on this site
+
+- Features: ${SITE_ORIGIN}${PAGES.features.path} — ${PAGES.features.description}
+- Docs: ${SITE_ORIGIN}${PAGES.docs.path} — ${PAGES.docs.description} FAQ at ${SITE_ORIGIN}${PAGES.docs.path}#faq. Data and privacy at ${SITE_ORIGIN}${PAGES.docs.path}#privacy.
+- Download: ${SITE_ORIGIN}${PAGES.download.path} — ${PAGES.download.description}
 
 ## Docs
 

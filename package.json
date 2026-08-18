@@ -10,7 +10,7 @@
     "start": "next start",
     "llms": "tsx scripts/write-llms.ts",
     "monitor": "tsx scripts/live-monitor.ts",
-    "test": "tsx scripts/write-llms.ts && tsx --test src/lib/site.test.ts src/lib/analytics.test.ts src/lib/llms.test.ts src/lib/monitor.test.ts"
+    "test": "tsx scripts/write-llms.ts && tsx --test src/lib/site.test.ts src/lib/analytics.test.ts src/lib/llms.test.ts src/lib/monitor.test.ts src/lib/content.test.ts"
   },
   "dependencies": {
     "next": "16.1.6",
