@@ -25,6 +25,12 @@ export const PAGES = {
     description:
       "Go7 Workhorse for macOS (Apple silicon and Intel) and Windows. Installers come from GitHub Releases.",
   },
+  changelog: {
+    path: "/changelog",
+    label: "Changelog",
+    title: "Changelog",
+    description: "What changed in each Go7 Workhorse release, read from GitHub Releases.",
+  },
 } as const;
 
 export type PageKey = keyof typeof PAGES;
@@ -50,6 +56,7 @@ export const FOOTER_LINKS = [
   { href: PAGES.features.path, label: PAGES.features.label },
   { href: PAGES.docs.path, label: PAGES.docs.label },
   { href: PAGES.download.path, label: PAGES.download.label },
+  { href: PAGES.changelog.path, label: PAGES.changelog.label },
   { href: RELEASES_INDEX_URL, label: "Releases" },
   { href: REPO_URL, label: "Public repo" },
   { href: GO7STUDIO_URL, label: "go7studio.com" },
@@ -63,6 +70,11 @@ export function absoluteUrl(path: string): string {
 /** Metadata for a subpage. Re-states the alternates so the llms.txt links survive the merge. */
 export function pageMetadata(key: Exclude<PageKey, "home">): Metadata {
   const page = PAGES[key];
+  return metadataFor({ path: page.path, title: page.title, description: page.description });
+}
+
+/** Metadata for any path on the site, docs pages included. */
+export function metadataFor(page: { path: string; title: string; description: string }): Metadata {
   const title = `${page.title} — ${PRODUCT_NAME}`;
   return {
     title,

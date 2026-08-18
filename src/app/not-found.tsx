@@ -13,7 +13,7 @@ export default function NotFound() {
   return (
     <div className="page">
       <SiteNav />
-      <main className="sub">
+      <main className="sub" id="main">
         <section className="sub-hero">
           <div className="sub-halo" aria-hidden="true" />
           <p className="eyebrow rise" style={{ ["--i" as string]: 1 }}>

@@ -1,26 +1,24 @@
 import type { Metadata } from "next";
-import { Inline } from "@/components/Inline";
-import { OnThisPage, Sections } from "@/components/Blocks";
 import { Cta } from "@/components/Cta";
 import { JsonLd } from "@/components/JsonLd";
 import { PageHero } from "@/components/PageHero";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
-import { DOC_SECTIONS, FAQ } from "@/lib/content";
+import { DOCS } from "@/lib/docs";
 import { PAGES, pageMetadata } from "@/lib/pages";
-import { breadcrumbLd, faqLd, techArticleLd } from "@/lib/schema";
+import { breadcrumbLd, docsIndexLd, webPageLd } from "@/lib/schema";
 import { REPO_URL } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata("docs");
 
-export default function DocsPage() {
+export default function DocsIndexPage() {
   const page = PAGES.docs;
   return (
     <div className="page">
       <JsonLd
         data={[
-          techArticleLd({ path: page.path, headline: `${page.title} — Go7 Workhorse`, description: page.description }),
-          faqLd(FAQ),
+          webPageLd({ path: page.path, name: page.title, description: page.description }),
+          docsIndexLd(),
           breadcrumbLd([
             { name: "Home", path: "/" },
             { name: page.label, path: page.path },
@@ -29,37 +27,27 @@ export default function DocsPage() {
       />
       <SiteNav current={page.path} />
 
-      <main className="sub">
+      <main className="sub" id="main">
         <PageHero
           title="Docs."
           lead="Install, connect what you already pay for, and read leftover. Short on purpose. The repo holds the rest."
-        >
-          <OnThisPage sections={DOC_SECTIONS} extra={[{ id: "faq", title: "FAQ" }]} />
-        </PageHero>
+        />
 
-        <article className="prose">
-          <Sections sections={DOC_SECTIONS} />
+        <ol className="doc-cards" aria-label="Guides">
+          {DOCS.map((doc, index) => (
+            <li key={doc.slug} className="doc-card rise" style={{ ["--i" as string]: Math.min(index, 8) + 2 }}>
+              <a href={`${page.path}/${doc.slug}`}>
+                <span className="doc-card-n">{String(index + 1).padStart(2, "0")}</span>
+                <strong>{doc.title}</strong>
+                <span className="doc-card-lead">{doc.lead}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
 
-          <section className="doc-section" id="faq">
-            <h2>
-              <a href="#faq">FAQ</a>
-            </h2>
-            <div className="faq">
-              {FAQ.map((item) => (
-                <details key={item.q}>
-                  <summary>{item.q}</summary>
-                  <p>
-                    <Inline text={item.a} />
-                  </p>
-                </details>
-              ))}
-            </div>
-          </section>
-
-          <p className="prose-note">
-            Something missing? The <a href={REPO_URL}>public repo</a> has the README, every release, and an issue tracker.
-          </p>
-        </article>
+        <p className="prose-note center">
+          Something missing? The <a href={REPO_URL}>public repo</a> has the README, every release, and an issue tracker.
+        </p>
 
         <section className="outro" aria-labelledby="outro-title">
           <h2 id="outro-title" className="outro-title">

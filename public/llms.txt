@@ -45,6 +45,8 @@ Logins, context, tools, leftover, and sandboxes never pool across vendors. Each 
 - Features: https://go7workhorse.com/features — Every ability Go7 Workhorse ships: agents, chats and projects, control, spend, work that outlives a turn, memory, extending it, settings, platforms.
 - Docs: https://go7workhorse.com/docs — Install Go7 Workhorse, connect the vendors you already pay for, read leftover, and see what stays on your machine. FAQ at https://go7workhorse.com/docs#faq. Data and privacy at https://go7workhorse.com/docs#privacy.
 - Download: https://go7workhorse.com/download — Go7 Workhorse for macOS (Apple silicon and Intel) and Windows. Installers come from GitHub Releases.
+- Changelog: https://go7workhorse.com/changelog — What changed in each Go7 Workhorse release, read from GitHub Releases.
+- Guides: https://go7workhorse.com/docs/getting-started, https://go7workhorse.com/docs/vendors, https://go7workhorse.com/docs/chats, https://go7workhorse.com/docs/control, https://go7workhorse.com/docs/spend, https://go7workhorse.com/docs/automation, https://go7workhorse.com/docs/memory, https://go7workhorse.com/docs/extending, https://go7workhorse.com/docs/commands, https://go7workhorse.com/docs/privacy, https://go7workhorse.com/docs/updates, https://go7workhorse.com/docs/troubleshooting, https://go7workhorse.com/docs/architecture, https://go7workhorse.com/docs/faq
 
 ## Docs
 

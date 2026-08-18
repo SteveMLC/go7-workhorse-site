@@ -1,3 +1,6 @@
+import type { Block } from "./content.ts";
+import { FEATURE_SECTIONS } from "./content.ts";
+import { DOCS } from "./docs.ts";
 import { PAGES } from "./pages.ts";
 import {
   DESK_LINE,
@@ -72,6 +75,8 @@ Logins, context, tools, leftover, and sandboxes never pool across vendors. Each 
 - Features: ${SITE_ORIGIN}${PAGES.features.path} — ${PAGES.features.description}
 - Docs: ${SITE_ORIGIN}${PAGES.docs.path} — ${PAGES.docs.description} FAQ at ${SITE_ORIGIN}${PAGES.docs.path}#faq. Data and privacy at ${SITE_ORIGIN}${PAGES.docs.path}#privacy.
 - Download: ${SITE_ORIGIN}${PAGES.download.path} — ${PAGES.download.description}
+- Changelog: ${SITE_ORIGIN}${PAGES.changelog.path} — ${PAGES.changelog.description}
+- Guides: ${DOCS.map((doc) => `${SITE_ORIGIN}${PAGES.docs.path}/${doc.slug}`).join(", ")}
 
 ## Docs
 
@@ -106,7 +111,46 @@ No. Keep the subscriptions. Workhorse spends them. It does not replace a vendor.
 ### "Who is this for?"
 
 ${whoQuestion()}
+
+## Features digest
+
+Every ability the desk ships, from the public docs/FEATURES.md. The site page is ${SITE_ORIGIN}${PAGES.features.path}.
+
+${FEATURE_SECTIONS.map((section) => `### ${section.title}\n\n${blocksToText(section.blocks)}`).join("\n\n")}
+
+## Docs digest
+
+The guides at ${SITE_ORIGIN}${PAGES.docs.path}, in reading order, as plain text.
+
+${DOCS.map((doc) => `### ${doc.title} — ${SITE_ORIGIN}${PAGES.docs.path}/${doc.slug}\n\n${doc.lead}\n\n${doc.sections
+    .map((section) => `#### ${section.title}\n\n${blocksToText(section.blocks)}`)
+    .join("\n\n")}${doc.faq ? doc.faq.map((item) => `- Q: ${item.q}\n  A: ${item.a}`).join("\n") : ""}`).join("\n\n")}
 `;
+}
+
+/** Strip the three inline marks so a text file reads clean. */
+export function plainText(text: string): string {
+  return text
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)")
+    .replace(/\*\*([^*]+)\*\*/g, "$1")
+    .replace(/`([^`]*)`/g, "$1");
+}
+
+export function blocksToText(blocks: Block[]): string {
+  const out: string[] = [];
+  for (const block of blocks) {
+    if (block.kind === "p" || block.kind === "h") out.push(plainText(block.text));
+    else if (block.kind === "code") out.push(block.text);
+    else if (block.kind === "ul") out.push(block.items.map((item) => `- ${plainText(item)}`).join("\n"));
+    else if (block.kind === "ol") out.push(block.items.map((item, i) => `${i + 1}. ${plainText(item)}`).join("\n"));
+    else if (block.kind === "table") {
+      out.push(block.head.join(" | "));
+      out.push(...block.rows.map((row) => row.map(plainText).join(" | ")));
+    } else if (block.kind === "video" || block.kind === "image") {
+      out.push(`[${block.kind}: ${block.alt}${block.caption ? ` — ${block.caption}` : ""}]`);
+    }
+  }
+  return out.join("\n");
 }
 
 function whoQuestion(): string {

@@ -5,15 +5,7 @@
  *
  * Inline marks in strings: `code`, **strong**, [text](href). Nothing else.
  */
-import {
-  CONTRIBUTING_URL,
-  FEATURES_MD_URL,
-  ISSUES_URL,
-  MAC_INSTALL_SCRIPT,
-  README_URL,
-  RELEASES_INDEX_URL,
-  RELEASES_URL,
-} from "./pages.ts";
+import { MAC_INSTALL_SCRIPT } from "./pages.ts";
 
 export type Fact = { title: string; body: string };
 
@@ -22,7 +14,10 @@ export type Block =
   | { kind: "ul"; items: string[] }
   | { kind: "ol"; items: string[] }
   | { kind: "table"; head: string[]; rows: string[][] }
-  | { kind: "code"; text: string };
+  | { kind: "code"; text: string }
+  | { kind: "h"; text: string }
+  | { kind: "video"; src: string; poster: string; width: number; height: number; alt: string; caption?: string }
+  | { kind: "image"; src: string; width: number; height: number; alt: string; caption?: string };
 
 export type Section = { id: string; title: string; blocks: Block[] };
 
@@ -79,6 +74,15 @@ export const FEATURE_SECTIONS: Section[] = [
       {
         kind: "p",
         text: "Each vendor runs under its own login. Subscriptions, context and sandboxes are never pooled.",
+      },
+      {
+        kind: "video",
+        src: "/media/providers",
+        poster: "/media/providers-poster.webp",
+        width: 404,
+        height: 470,
+        alt: "Chat settings in the desk: the Provider row switches from Grok to Codex and the model list follows.",
+        caption: "One chat, four providers — the model list follows the provider. Kimi K3 and MiniMax M3 in that list are custom bots, added with a URL and a key.",
       },
       {
         kind: "p",
@@ -150,6 +154,15 @@ export const FEATURE_SECTIONS: Section[] = [
     title: "Spend",
     blocks: [
       {
+        kind: "video",
+        src: "/media/meters",
+        poster: "/media/meters-poster.webp",
+        width: 820,
+        height: 624,
+        alt: "Settings, Watch tab: seven leftover rings, one per bot, with the daily bank toggle above them.",
+        caption: "Real meters, read from each vendor's own numbers. The daily bank hands every bot a slice of its plan per day and carries forward what it did not spend.",
+      },
+      {
         kind: "ul",
         items: [
           "Usage recorded per vendor and per chat, from each vendor's own count: the ACP turn total, or the HTTP response's usage block. A turn is estimated at four characters a token only when the vendor sent no count.",
@@ -166,6 +179,14 @@ export const FEATURE_SECTIONS: Section[] = [
     id: "outlives",
     title: "Work that outlives a turn",
     blocks: [
+      {
+        kind: "image",
+        src: "/media/fanout.png",
+        width: 336,
+        height: 378,
+        alt: "The desk sidebar: one orchestrator chat with seven worker chats nested under it, each on a different model, all done.",
+        caption: "One brief, seven workers. The orchestrator spawned every bot on the desk at once — Codex, Grok, Claude, Cursor twice, and two custom bots — each in its own chat with its own slice, then joined their reports into one list.",
+      },
       {
         kind: "ul",
         items: [
@@ -236,151 +257,7 @@ export const FEATURE_SECTIONS: Section[] = [
   },
 ];
 
-/* ---------- /docs ---------- */
-
-export const DOC_SECTIONS: Section[] = [
-  {
-    id: "install",
-    title: "Install",
-    blocks: [
-      {
-        kind: "p",
-        text: `**Mac.** Download the disk image for your Mac — Apple silicon or Intel — from [GitHub Releases](${RELEASES_URL}), open it, and drag Go7 Workhorse to Applications. Or let one line pick the right build:`,
-      },
-      { kind: "code", text: MAC_INSTALL_SCRIPT },
-      {
-        kind: "p",
-        text: "**Windows.** Run `Go7-Workhorse-Setup-<version>.exe`. It adds Start-menu and Desktop shortcuts and keeps your projects and chats across updates.",
-      },
-      {
-        kind: "p",
-        text: "**Linux.** Builds and tests in CI. No installer yet.",
-      },
-    ],
-  },
-  {
-    id: "first-run",
-    title: "First run",
-    blocks: [
-      {
-        kind: "ol",
-        items: [
-          "**New project** — give it a name. No folder needed.",
-          "**New chat** from that project. Vendor, model and thinking effort sit on the chat; change them from the menu on the message box.",
-          "**Link a folder** or **add a reference** when the work needs files, URLs or notes. Several folders are allowed.",
-          "Type `/` for the palette. `/settings` opens Profile, LLMs, skills, routing, learning, usage and watch.",
-        ],
-      },
-    ],
-  },
-  {
-    id: "vendors",
-    title: "Connect the vendors you pay for",
-    blocks: [
-      {
-        kind: "p",
-        text: "Grok, Claude, Codex and Cursor each run through their own CLI, under the login you already hold. Vendor CLIs are not bundled: install the one you use, sign in to it as you normally do, and Settings → LLMs shows what is connected.",
-      },
-      {
-        kind: "table",
-        head: ["Vendor", "Runs", "Login"],
-        rows: [
-          ["Grok", "the local Grok CLI, `grok agent stdio`", "your Grok plan"],
-          ["Claude", "the local Claude Code CLI", "your Claude plan"],
-          ["Codex", "the local Codex CLI, plus its App Server when present", "your Codex plan"],
-          ["Cursor", "`cursor-agent`, the Cursor CLI", "your Cursor login"],
-        ],
-      },
-      {
-        kind: "p",
-        text: "**Custom bots.** Paste a URL and a key — any Anthropic Messages or OpenAI Chat Completions endpoint, hosted or on your own machine. Test the connection to list the models it serves and tick the ones you want. The key goes to Keychain on macOS or DPAPI on Windows, never plain text; if that store is unavailable the desk refuses to save it.",
-      },
-    ],
-  },
-  {
-    id: "leftover",
-    title: "Read leftover",
-    blocks: [
-      {
-        kind: "ul",
-        items: [
-          "**Settings → Usage** — a ring per vendor and per custom bot, from each vendor's own meter. In, Cached and Out are named apart. View by day, week, month or all time.",
-          "**Settings → Watch** — the weekly pace and the daily bank. You set the pace.",
-          "A missing official meter stays unknown. It is not shown as zero, and not as full.",
-          "Cursor is two monthly pools and shows as two rings.",
-        ],
-      },
-    ],
-  },
-  {
-    id: "control",
-    title: "Stay in control",
-    blocks: [
-      {
-        kind: "ul",
-        items: [
-          "**Permission modes** — ask, accept-edits, always-approve, plan. Every prompt lands in one inbox and is translated to each vendor's own protocol.",
-          "**Sandbox profiles** — off, workspace, read-only, strict. Permission and sandbox are separate controls, both visible on the chat.",
-          "**Where a chat runs** — a linked folder, or a managed git worktree kept apart from your working copy. Terminal and Git review use that same directory.",
-          "**Git review** — the Changes control opens the files and diffs for the work a chat did.",
-        ],
-      },
-    ],
-  },
-  {
-    id: "palette",
-    title: "The / palette",
-    blocks: [
-      {
-        kind: "p",
-        text: "Type `/` in any chat: new, project, link, model, effort, compact, plan, sandbox, usage, watch, schedule, goal, skills, review, context, rewind, export, memory, hooks, plugins, workflows, and more.",
-      },
-    ],
-  },
-  {
-    id: "privacy",
-    title: "Data and privacy",
-    blocks: [
-      {
-        kind: "ul",
-        items: [
-          "**Where things live.** State is saved on your machine under the app's user-data folder as a versioned `workhorse-state.json`. Writes are atomic and three backup generations are kept.",
-          "**Keys.** API keys go in the OS credential store — Keychain on macOS, DPAPI on Windows — never in plain text. If that store is unavailable the desk refuses to save the key at all.",
-          "**Memory.** The learning store is a SQLite file on your disk. Export it or wipe it from Settings → Learning. Nothing is sent anywhere to hold it.",
-          "**What it talks to.** The vendors you connect, including their usage endpoints for the meters, and GitHub, to check for a newer release. It sends no analytics.",
-          "**Support report.** Settings can export one that excludes prompts, messages, file contents, environment variables, URLs and credential values.",
-          "**No account, no server of ours.** Each vendor runs through its own CLI or API under your own login. Nothing is pooled, proxied or shared between vendors.",
-        ],
-      },
-    ],
-  },
-  {
-    id: "updates",
-    title: "Updates",
-    blocks: [
-      {
-        kind: "p",
-        text: `Settings → Profile checks GitHub for a newer desk. On a Mac, the installer downloads that release's disk image and replaces the app; one macOS approval sticks across updates. On Windows the same app identity and encrypted vault carry across updates. Every release is on [GitHub Releases](${RELEASES_INDEX_URL}).`,
-      },
-    ],
-  },
-  {
-    id: "more",
-    title: "More",
-    blocks: [
-      {
-        kind: "ul",
-        items: [
-          `[README](${README_URL}) — how it fits together, and how to run it from source.`,
-          `[FEATURES.md](${FEATURES_MD_URL}) — every ability, kept current with each release.`,
-          `[CONTRIBUTING](${CONTRIBUTING_URL}) — repository shape and versioning rules.`,
-          `[Releases](${RELEASES_INDEX_URL}) — installers and notes for every version.`,
-          `[Issues](${ISSUES_URL}) — report a bug or ask for something.`,
-        ],
-      },
-    ],
-  },
-];
+/* ---------- /docs (the guides live in docs.ts; the FAQ is shared) ---------- */
 
 export const FAQ: Faq[] = [
   {

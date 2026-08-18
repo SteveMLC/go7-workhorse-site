@@ -6,7 +6,8 @@
  */
 import type { Faq } from "./content.ts";
 import { HOME_FACTS } from "./content.ts";
-import { GO7STUDIO_URL, absoluteUrl } from "./pages.ts";
+import { DOCS } from "./docs.ts";
+import { GO7STUDIO_URL, PAGES, absoluteUrl } from "./pages.ts";
 import {
   APP_ID,
   DESK_LINE,
@@ -108,6 +109,23 @@ export function homeFactsLd() {
       position: index + 1,
       name: fact.title,
       description: fact.body,
+    })),
+  };
+}
+
+/** The docs index as an ItemList of TechArticles, in reading order. */
+export function docsIndexLd() {
+  return {
+    "@context": CONTEXT,
+    "@type": "ItemList",
+    name: `${PRODUCT_NAME} docs`,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    itemListElement: DOCS.map((doc, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: doc.title,
+      description: doc.lead,
+      url: absoluteUrl(`${PAGES.docs.path}/${doc.slug}`),
     })),
   };
 }

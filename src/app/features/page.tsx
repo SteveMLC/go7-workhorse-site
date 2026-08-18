@@ -26,7 +26,7 @@ export default function FeaturesPage() {
       />
       <SiteNav current={page.path} />
 
-      <main className="sub">
+      <main className="sub" id="main">
         <PageHero
           title="Everything the desk does."
           lead="Every ability that ships, on one page. It follows the repo's FEATURES.md line for line: if it is not there, it is not shipped."

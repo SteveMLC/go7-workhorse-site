@@ -26,7 +26,7 @@ export default function DownloadPage() {
       />
       <SiteNav current={page.path} />
 
-      <main className="sub">
+      <main className="sub" id="main">
         <PageHero
           title="Download."
           lead="Windows and macOS. Installers come from GitHub Releases, built and signed for each platform."

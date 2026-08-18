@@ -38,6 +38,39 @@ export function Blocks({ blocks }: { blocks: Block[] }) {
                 <code>{block.text}</code>
               </pre>
             );
+          case "h":
+            return (
+              <h4 key={index}>
+                <Inline text={block.text} />
+              </h4>
+            );
+          case "video":
+            return (
+              <figure className="shotfig" key={index}>
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  poster={block.poster}
+                  width={block.width}
+                  height={block.height}
+                  aria-label={block.alt}
+                >
+                  <source src={`${block.src}.webm`} type="video/webm" />
+                  <source src={`${block.src}.mp4`} type="video/mp4" />
+                </video>
+                {block.caption ? <figcaption>{block.caption}</figcaption> : null}
+              </figure>
+            );
+          case "image":
+            return (
+              <figure className="shotfig" key={index}>
+                <img src={block.src} width={block.width} height={block.height} alt={block.alt} loading="lazy" decoding="async" />
+                {block.caption ? <figcaption>{block.caption}</figcaption> : null}
+              </figure>
+            );
           case "table":
             return (
               <div className="table-wrap" key={index}>

@@ -20,7 +20,7 @@ export default function HomePage() {
       <Pointer />
       <SiteNav current="/" />
 
-      <main>
+      <main id="main">
         <section className="hero">
           <div className="halo" aria-hidden="true">
             <i />

@@ -4,6 +4,9 @@ import { PRODUCT_NAME } from "@/lib/site";
 export function SiteNav({ current = "/" }: { current?: string }) {
   return (
     <header className="nav">
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
       <div className="nav-inner">
         <a className="brand" href="/">
           <img src="/logo.png" alt="" width={26} height={26} />

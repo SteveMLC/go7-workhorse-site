@@ -3,27 +3,41 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
-import { DOC_SECTIONS, DOWNLOAD_STEPS, FAQ, FEATURE_SECTIONS, HOME_FACTS } from "./content.ts";
-import { FOOTER_LINKS, NAV_LINKS, PAGES, pageMetadata } from "./pages.ts";
+import { notesToBlocks, parseReleases } from "./changelog.ts";
+import type { Block } from "./content.ts";
+import { DOWNLOAD_STEPS, FAQ, FEATURE_SECTIONS, HOME_FACTS } from "./content.ts";
+import { DESK_COMMANDS } from "./desk-commands.ts";
+import { DOCS, DOC_SLUGS, docBySlug, docNeighbours } from "./docs.ts";
+import { blocksToText, plainText } from "./llms.ts";
+import { FOOTER_LINKS, NAV_LINKS, PAGES, metadataFor, pageMetadata } from "./pages.ts";
 import { formatSize, parseLatestRelease } from "./release.ts";
 import { FEATURE_LIST } from "./feature-list.ts";
-import { breadcrumbLd, faqLd, organizationLd, techArticleLd, webSiteLd } from "./schema.ts";
+import { breadcrumbLd, docsIndexLd, faqLd, organizationLd, techArticleLd, webSiteLd } from "./schema.ts";
 import { PRODUCT_NAME, RELEASES_URL, REPO_URL, softwareApplicationJsonLd } from "./site.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const appDir = join(here, "../app");
 
+function blockStrings(blocks: Block[]): string[] {
+  const parts: string[] = [];
+  for (const block of blocks) {
+    if (block.kind === "p" || block.kind === "code" || block.kind === "h") parts.push(block.text);
+    if (block.kind === "ul" || block.kind === "ol") parts.push(...block.items);
+    if (block.kind === "table") parts.push(...block.head, ...block.rows.flat());
+    if (block.kind === "video" || block.kind === "image") parts.push(block.alt, block.caption ?? "");
+  }
+  return parts;
+}
+
+const ALL_SECTIONS = [...FEATURE_SECTIONS, ...DOCS.flatMap((doc) => doc.sections)];
+
 /** Every string a human page prints, flattened. */
 function humanCopy(): string {
   const parts: string[] = [];
   for (const fact of HOME_FACTS) parts.push(fact.title, fact.body);
-  for (const section of [...FEATURE_SECTIONS, ...DOC_SECTIONS]) {
-    parts.push(section.title);
-    for (const block of section.blocks) {
-      if (block.kind === "p" || block.kind === "code") parts.push(block.text);
-      if (block.kind === "ul" || block.kind === "ol") parts.push(...block.items);
-      if (block.kind === "table") parts.push(...block.head, ...block.rows.flat());
-    }
+  for (const doc of DOCS) parts.push(doc.title, doc.lead);
+  for (const section of ALL_SECTIONS) {
+    parts.push(section.title, ...blockStrings(section.blocks));
   }
   for (const item of FAQ) parts.push(item.q, item.a);
   parts.push(...DOWNLOAD_STEPS.mac, ...DOWNLOAD_STEPS.windows, ...DOWNLOAD_STEPS.then);
@@ -48,16 +62,22 @@ describe("human pages beyond the door", () => {
   it("have six home facts, ten feature sections, and a FAQ", () => {
     assert.equal(HOME_FACTS.length, 6);
     assert.equal(FEATURE_SECTIONS.length, 10);
-    assert.ok(DOC_SECTIONS.length >= 8);
     assert.ok(FAQ.length >= 8);
-    for (const section of [...FEATURE_SECTIONS, ...DOC_SECTIONS]) {
+    for (const section of ALL_SECTIONS) {
       assert.match(section.id, /^[a-z][a-z0-9-]*$/);
       assert.ok(section.blocks.length > 0, `${section.id} has blocks`);
     }
-    const ids = [...FEATURE_SECTIONS, ...DOC_SECTIONS].map((s) => s.id);
     assert.equal(new Set(FEATURE_SECTIONS.map((s) => s.id)).size, FEATURE_SECTIONS.length);
-    assert.equal(new Set(DOC_SECTIONS.map((s) => s.id)).size, DOC_SECTIONS.length);
-    assert.ok(ids.includes("privacy"));
+  });
+
+  it("carry real footage of the desk on the features page", () => {
+    const media = FEATURE_SECTIONS.flatMap((s) => s.blocks).filter((b) => b.kind === "video" || b.kind === "image");
+    assert.ok(media.length >= 3);
+    for (const block of media) {
+      assert.ok(block.alt.length > 20, "alt text names what is on screen");
+      const files = block.kind === "video" ? [`${block.src}.mp4`, `${block.src}.webm`, block.poster] : [block.src];
+      for (const file of files) assert.ok(existsSync(join(here, "../../public", file)), `media file ${file}`);
+    }
   });
 
   it("only use the three inline marks, balanced", () => {
@@ -69,6 +89,118 @@ describe("human pages beyond the door", () => {
       const outsideCode = line.split("`").filter((_, i) => i % 2 === 0).join("");
       assert.doesNotMatch(outsideCode, /<[a-z]+>/i, `no html in copy: ${line}`);
     }
+  });
+});
+
+describe("docs", () => {
+  it("are fourteen guides with unique kebab slugs, in a fixed reading order", () => {
+    assert.equal(DOCS.length, 14);
+    assert.equal(new Set(DOC_SLUGS).size, DOCS.length);
+    for (const doc of DOCS) {
+      assert.match(doc.slug, /^[a-z][a-z0-9-]*$/);
+      assert.ok(doc.title.length > 2 && doc.lead.length > 10, doc.slug);
+      assert.ok(doc.sections.length > 0 || doc.faq, `${doc.slug} has content`);
+      assert.equal(new Set(doc.sections.map((s) => s.id)).size, doc.sections.length, `${doc.slug} section ids unique`);
+    }
+    for (const slug of ["getting-started", "vendors", "commands", "privacy", "troubleshooting", "faq"]) {
+      assert.ok(docBySlug(slug), `doc ${slug}`);
+    }
+    assert.equal(DOC_SLUGS[0], "getting-started");
+    assert.equal(docNeighbours("getting-started").prev, undefined);
+    assert.equal(docNeighbours("getting-started").next?.slug, "vendors");
+    assert.equal(docNeighbours("faq").next, undefined);
+  });
+
+  it("list every desk palette command in the reference", () => {
+    const commands = docBySlug("commands");
+    assert.ok(commands);
+    const table = commands.sections[0].blocks.find((b) => b.kind === "table");
+    assert.ok(table && table.kind === "table");
+    assert.equal(table.rows.length, DESK_COMMANDS.length);
+    for (const command of DESK_COMMANDS) {
+      assert.ok(table.rows.some((row) => row[0].includes(`\`${command.name}\``)), `row for ${command.name}`);
+    }
+    assert.ok(DESK_COMMANDS.some((c) => c.name === "/settings" && c.aliases?.includes("/config")));
+  });
+
+  it("only link to pages and anchors that exist", () => {
+    const text = humanCopy();
+    const internal = [...text.matchAll(/\]\((\/[^)#\s]*)(#[^)\s]*)?\)/g)];
+    assert.ok(internal.length > 0);
+    for (const [, path, hash] of internal) {
+      const clean = path.replace(/\/$/, "");
+      if (clean === "" || clean === "/") continue;
+      if (clean.startsWith("/docs/")) {
+        const doc = docBySlug(clean.slice("/docs/".length));
+        assert.ok(doc, `docs link ${clean}`);
+        if (hash) assert.ok(doc.sections.some((s) => `#${s.id}` === hash), `anchor ${clean}${hash}`);
+        continue;
+      }
+      const dir = join(appDir, clean.slice(1));
+      assert.ok(existsSync(join(dir, "page.tsx")), `page for ${clean}`);
+    }
+  });
+
+  it("build metadata and schema per guide", () => {
+    for (const doc of DOCS) {
+      const meta = metadataFor({ path: `/docs/${doc.slug}`, title: doc.title, description: doc.lead });
+      assert.equal(meta.alternates?.canonical, `/docs/${doc.slug}`);
+      assert.match(String(meta.title), /Go7 Workhorse/);
+    }
+    const list = docsIndexLd();
+    assert.equal(list.itemListElement.length, DOCS.length);
+    assert.equal(list.itemListElement[0].url, "https://go7workhorse.com/docs/getting-started");
+  });
+});
+
+describe("changelog reader", () => {
+  const body = `## [0.6.2](https://github.com/go7studio/Go7-Workhorse/compare/v0.6.1...v0.6.2) (2026-08-18)\n\n\n### Features\n\n* **desk:** keep leftover ring per bot ([1a2b3c4](https://github.com/go7studio/Go7-Workhorse/commit/1a2b3c4))\n* wrap a long line\n  that continues here\n\n### Bug Fixes\n\n* **watch:** hold on <b>send</b> ([9f8e7d6](https://github.com/x/y))\n\nPlain closing line.`;
+
+  it("turns release-please markdown into headings, bullets and paragraphs, and drops the version line", () => {
+    const blocks = notesToBlocks(body);
+    assert.deepEqual(blocks.map((b) => b.kind), ["h", "ul", "h", "ul", "p"]);
+    const first = blocks[1];
+    assert.ok(first.kind === "ul");
+    assert.equal(first.items.length, 2);
+    assert.match(first.items[0], /^\*\*desk:\*\* keep leftover ring/);
+    assert.equal(first.items[1], "wrap a long line that continues here");
+    const fixes = blocks[3];
+    assert.ok(fixes.kind === "ul");
+    assert.doesNotMatch(fixes.items[0], /<b>/);
+    assert.equal(blocks[0].kind === "h" && blocks[0].text, "Features");
+  });
+
+  it("parses the releases list, skips drafts, and strips the v", () => {
+    const releases = parseReleases([
+      { tag_name: "v0.6.2", name: "Go7 Workhorse 0.6.2", html_url: "https://x/v0.6.2", published_at: "2026-08-18T22:32:20Z", body },
+      { tag_name: "v0.6.1", draft: true, body: "* nope" },
+      { tag_name: "v0.6.0", name: "", body: null },
+      { nonsense: true },
+    ]);
+    assert.equal(releases.length, 2);
+    assert.equal(releases[0].version, "0.6.2");
+    assert.equal(releases[0].blocks.length, 5);
+    assert.equal(releases[1].name, "Go7 Workhorse 0.6.0");
+    assert.equal(releases[1].blocks.length, 0);
+    assert.deepEqual(parseReleases(null), []);
+    assert.deepEqual(parseReleases({}), []);
+  });
+});
+
+describe("llms digest", () => {
+  it("strips the inline marks and flattens blocks to text", () => {
+    assert.equal(plainText("Use **Settings → LLMs**, then `/watch` and [docs](/docs)."), "Use Settings → LLMs, then /watch and docs (/docs).");
+    const text = blocksToText([
+      { kind: "h", text: "Head" },
+      { kind: "ul", items: ["**a**", "`b`"] },
+      { kind: "table", head: ["X", "Y"], rows: [["1", "`2`"]] },
+    ]);
+    assert.equal(text, "Head\n- a\n- b\nX | Y\n1 | 2");
+    const full = readFileSync(join(here, "../../public/llms-full.txt"), "utf8");
+    assert.match(full, /## Docs digest/);
+    assert.match(full, /## Features digest/);
+    for (const doc of DOCS) assert.ok(full.includes(`https://go7workhorse.com/docs/${doc.slug}`), `digest lists ${doc.slug}`);
+    assert.doesNotMatch(full, /\*\*/);
   });
 });
 
@@ -106,10 +238,11 @@ describe("routes, nav and footer", () => {
   it("sitemap and llms.txt name every page", () => {
     const sitemap = readFileSync(join(appDir, "sitemap.ts"), "utf8");
     const llms = readFileSync(join(here, "../../public/llms.txt"), "utf8");
-    for (const key of ["features", "docs", "download"] as const) {
+    for (const key of ["features", "docs", "download", "changelog"] as const) {
       assert.match(sitemap, new RegExp(`PAGES\\.${key}\\.path`));
       assert.ok(llms.includes(`https://go7workhorse.com${PAGES[key].path}`), `llms lists ${key}`);
     }
+    assert.match(sitemap, /DOCS\.map/);
   });
 });
 
