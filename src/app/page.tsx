@@ -1,4 +1,5 @@
 import { DeskWindow } from "@/components/DeskWindow";
+import { DownloadLink } from "@/components/DownloadLink";
 import { Pointer } from "@/components/Pointer";
 import { Stage } from "@/components/Stage";
 import { homeModel } from "@/lib/site";
@@ -62,13 +63,11 @@ export default function HomePage() {
 
           <div className="actions rise" style={{ ["--i" as string]: 5 }}>
             {model.downloads.map((item) => (
-              <a
+              <DownloadLink
                 key={item.platform}
+                action={item}
                 className={`btn btn-primary btn-${item.platform}`}
-                href={item.href}
-              >
-                {item.label}
-              </a>
+              />
             ))}
           </div>
 

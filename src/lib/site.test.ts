@@ -64,6 +64,8 @@ describe("page wires the shipped helpers", () => {
     const page = readFileSync(join(here, "../app/page.tsx"), "utf8");
     assert.match(page, /homeModel/);
     assert.match(page, /from ["']@\/lib\/site["']/);
+    assert.match(page, /from ["']@\/components\/DownloadLink["']/);
+    assert.match(page, /<DownloadLink/);
     assert.doesNotMatch(page, /<textarea\b/i);
     assert.doesNotMatch(page, /\bcomposer\b/i);
     assert.doesNotMatch(page, /\bchat-input\b/i);
