@@ -43,28 +43,13 @@ export default function HomePage() {
         <DeskWindow />
       </section>
 
-      <section className="fit">
-        <div>
-          <h3>A good fit if</h3>
-          <ul>
-            {model.fit.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h3>Not a fit if</h3>
-          <ul>
-            {model.notFit.map((line) => (
-              <li key={line}>{line}</li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
       <footer className="foot">
         <span>{model.productName} · MIT · Go7 Studio</span>
-        <a href="https://go7studio.com">go7studio.com</a>
+        <span>
+          <a href="https://go7studio.com">go7studio.com</a>
+          {" · "}
+          <a href={model.agentSource}>llms.txt</a>
+        </span>
       </footer>
     </main>
   );

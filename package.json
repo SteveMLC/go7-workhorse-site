@@ -5,9 +5,11 @@
   "description": "Product page for Go7 Workhorse — one desk, every subscription stays its own.",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "tsx scripts/write-llms.ts",
     "build": "next build",
     "start": "next start",
-    "test": "tsx --test src/lib/site.test.ts"
+    "llms": "tsx scripts/write-llms.ts",
+    "test": "tsx scripts/write-llms.ts && tsx --test src/lib/site.test.ts src/lib/llms.test.ts"
   },
   "dependencies": {
     "next": "16.1.6",

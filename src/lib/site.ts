@@ -46,16 +46,7 @@ export function homeModel() {
       downloadAction("windows"),
     ] as const,
     lead: "Run Grok, Claude, Codex, Cursor, your own API keys and your local models in one window. Each keeps its own login.",
-    fit: [
-      "You hold two or more AI subscriptions or API keys.",
-      "You want the routing choice to be yours.",
-      "You want the work to run on your machine, under your own logins.",
-    ],
-    notFit: [
-      "You use one vendor and are happy in its own app.",
-      "You want a hosted service.",
-      "You need Linux today. Installers ship for Windows and macOS.",
-    ],
+    agentSource: "/llms.txt",
   };
 }
 

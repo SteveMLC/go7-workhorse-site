@@ -20,7 +20,15 @@ export const metadata: Metadata = {
     title: PRODUCT_NAME,
     description: DESK_LINE,
   },
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    types: {
+      "text/plain": [
+        { url: "/llms.txt", title: "LLM source" },
+        { url: "/llms-full.txt", title: "LLM full brief" },
+      ],
+    },
+  },
 };
 
 export default function RootLayout({

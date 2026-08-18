@@ -346,32 +346,6 @@ h1 {
   color: var(--text-tertiary);
 }
 
-.fit {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 80px;
-}
-
-.fit h3 {
-  margin: 0 0 12px;
-  font-size: 15px;
-}
-
-.fit ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fit li {
-  color: var(--text-secondary);
-  font-size: 15px;
-  line-height: 1.45;
-  padding: 8px 0 8px 16px;
-  border-left: 2px solid var(--line);
-}
-
 .foot {
   margin-top: 72px;
   padding-top: 22px;
@@ -389,7 +363,6 @@ h1 {
 
 @media (max-width: 900px) {
   .hero,
-  .fit,
   .desk-body {
     grid-template-columns: 1fr;
   }
