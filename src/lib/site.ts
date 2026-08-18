@@ -1,4 +1,6 @@
 export const PRODUCT_NAME = "Go7 Workhorse";
+export const STUDIO_NAME = "Go7 Studio";
+export const STUDIO_URL = "https://go7studio.com";
 export const DESK_LINE = "One desk. Every Subscription.";
 export const SUBSCRIPTION_CLAIM = "Every subscription stays its own.";
 export const NO_HOST_CLAIM =
@@ -51,3 +53,43 @@ export function homeModel() {
 }
 
 export type HomeModel = ReturnType<typeof homeModel>;
+
+export type SoftwareApplicationJsonLd = {
+  "@context": "https://schema.org";
+  "@type": "SoftwareApplication";
+  name: string;
+  description: string;
+  applicationCategory: "BusinessApplication";
+  operatingSystem: string[];
+  url: string;
+  downloadUrl: string;
+  sameAs: string[];
+  author: {
+    "@type": "Organization";
+    name: string;
+    url: string;
+  };
+};
+
+export function softwareApplicationJsonLd(): SoftwareApplicationJsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: PRODUCT_NAME,
+    description: `${DESK_LINE} ${NO_HOST_CLAIM} Native desktop for Windows and macOS.`,
+    applicationCategory: "BusinessApplication",
+    operatingSystem: ["Windows", "macOS"],
+    url: SITE_ORIGIN,
+    downloadUrl: RELEASES_URL,
+    sameAs: [REPO_URL],
+    author: {
+      "@type": "Organization",
+      name: STUDIO_NAME,
+      url: STUDIO_URL,
+    },
+  };
+}
+
+export function softwareApplicationJsonLdScript(): string {
+  return JSON.stringify(softwareApplicationJsonLd()).replace(/</g, "\\u003c");
+}

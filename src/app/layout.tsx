@@ -1,6 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
-import { DESK_LINE, NO_HOST_CLAIM, PRODUCT_NAME, SITE_ORIGIN } from "@/lib/site";
+import {
+  DESK_LINE,
+  NO_HOST_CLAIM,
+  PRODUCT_NAME,
+  SITE_ORIGIN,
+  softwareApplicationJsonLdScript,
+} from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -42,14 +48,22 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const softwareJsonLd = softwareApplicationJsonLdScript();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Marks JS before first paint so scroll-reveal motion never hides the page from a no-JS reader. */}
         <script
+          key="document-js-flag"
           dangerouslySetInnerHTML={{
             __html: "document.documentElement.classList.add('js')",
           }}
+        />
+        <script
+          key="software-application-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: softwareJsonLd }}
         />
         <GoogleAnalytics />
       </head>

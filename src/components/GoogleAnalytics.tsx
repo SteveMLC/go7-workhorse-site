@@ -8,10 +8,12 @@ export function GoogleAnalytics() {
   return (
     <>
       <script
+        key="ga-loader"
         async
         src={`https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`}
       />
       <script
+        key="ga-config"
         dangerouslySetInnerHTML={{
           __html: `
           window.dataLayer = window.dataLayer || [];

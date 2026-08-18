@@ -9,10 +9,15 @@ import {
   PRODUCT_NAME,
   RELEASES_URL,
   REPO_URL,
+  SITE_ORIGIN,
+  STUDIO_NAME,
+  STUDIO_URL,
   SUBSCRIPTION_CLAIM,
   downloadAction,
   downloadHref,
   homeModel,
+  softwareApplicationJsonLd,
+  softwareApplicationJsonLdScript,
 } from "./site.ts";
 
 const RELEASE_HOST = "https://github.com/go7studio/Go7-Workhorse/releases";
@@ -69,5 +74,39 @@ describe("page wires the shipped helpers", () => {
     assert.doesNotMatch(page, /<textarea\b/i);
     assert.doesNotMatch(page, /\bcomposer\b/i);
     assert.doesNotMatch(page, /\bchat-input\b/i);
+  });
+});
+
+describe("softwareApplicationJsonLd", () => {
+  it("describes the shipped desktop app without inventing unsupported claims", () => {
+    assert.deepEqual(softwareApplicationJsonLd(), {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: PRODUCT_NAME,
+      description: `${DESK_LINE} ${NO_HOST_CLAIM} Native desktop for Windows and macOS.`,
+      applicationCategory: "BusinessApplication",
+      operatingSystem: ["Windows", "macOS"],
+      url: SITE_ORIGIN,
+      downloadUrl: RELEASES_URL,
+      sameAs: [REPO_URL],
+      author: {
+        "@type": "Organization",
+        name: STUDIO_NAME,
+        url: STUDIO_URL,
+      },
+    });
+  });
+
+  it("serializes a safe JSON-LD payload for the document head", () => {
+    const json = softwareApplicationJsonLdScript();
+    assert.deepEqual(JSON.parse(json), softwareApplicationJsonLd());
+    assert.doesNotMatch(json, /</);
+  });
+
+  it("is wired into the Next layout head", () => {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const layout = readFileSync(join(here, "../app/layout.tsx"), "utf8");
+    assert.match(layout, /softwareApplicationJsonLdScript/);
+    assert.match(layout, /type="application\/ld\+json"/);
   });
 });
