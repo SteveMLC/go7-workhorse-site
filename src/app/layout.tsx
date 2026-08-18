@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { DESK_LINE, NO_HOST_CLAIM, PRODUCT_NAME, SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
 
@@ -50,6 +51,7 @@ export default function RootLayout({
             __html: "document.documentElement.classList.add('js')",
           }}
         />
+        <GoogleAnalytics />
       </head>
       <body>{children}</body>
     </html>
