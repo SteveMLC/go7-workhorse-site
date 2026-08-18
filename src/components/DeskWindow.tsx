@@ -1,64 +1,92 @@
-import { PRODUCT_NAME, SUBSCRIPTION_CLAIM } from "@/lib/site";
+import { PRODUCT_NAME } from "@/lib/site";
 
+type Vendor = "grok" | "claude" | "codex" | "cursor";
+
+const RINGS: { vendor: Vendor; name: string; left: number }[] = [
+  { vendor: "grok", name: "Grok", left: 68 },
+  { vendor: "claude", name: "Claude", left: 41 },
+  { vendor: "codex", name: "Codex", left: 83 },
+  { vendor: "cursor", name: "Cursor", left: 27 },
+];
+
+const CHATS: { vendor: Vendor; title: string }[] = [
+  { vendor: "grok", title: "Route the leftover" },
+  { vendor: "claude", title: "Review the join" },
+  { vendor: "codex", title: "Cut the slice" },
+  { vendor: "cursor", title: "Open the tree" },
+];
+
+/** A still picture of the desk. Nothing here takes input. */
 export function DeskWindow() {
   return (
-    <figure className="desk" aria-label="macOS-style Go7 Workhorse window">
-      <div className="desk-titlebar">
+    <figure className="desk" aria-label={`${PRODUCT_NAME} window on macOS`}>
+      <div className="desk-chrome">
         <div className="traffic" aria-hidden="true">
           <i className="close" />
           <i className="min" />
-          <i className="max" />
+          <i className="zoom" />
         </div>
         <div className="desk-title">{PRODUCT_NAME}</div>
       </div>
+
       <div className="desk-body">
-        <aside className="sidebar">
-          <div className="section-label">Projects</div>
-          <div className="row active">Qualora</div>
-          <div className="row">ShoreClose</div>
-          <div className="row">Desk</div>
-          <div className="section-label">Chats</div>
-          <div className="row">
-            <span className="dot grok" />
-            Route leftover
+        <aside className="desk-side" aria-hidden="true">
+          <div className="side-brand">
+            <img src="/logo.png" alt="" width={22} height={22} />
+            <span>{PRODUCT_NAME}</span>
           </div>
-          <div className="row">
-            <span className="dot claude" />
-            Review the join
-          </div>
-          <div className="row">
-            <span className="dot codex" />
-            Cut the slice
-          </div>
-          <div className="row">
-            <span className="dot cursor" />
-            Open the tree
-          </div>
+          <div className="side-search">Search all chats</div>
+
+          <div className="side-label">Projects</div>
+          <div className="side-row active">Qualora</div>
+          <div className="side-row">ShoreClose</div>
+          <div className="side-row">Rampart</div>
+
+          <div className="side-label">Chats</div>
+          {CHATS.map((chat, index) => (
+            <div className="side-row" key={chat.vendor}>
+              <span className={`dot ${chat.vendor}${index === 2 ? " live" : ""}`} />
+              {chat.title}
+            </div>
+          ))}
         </aside>
-        <div className="stage">
-          <h2>Leftover this week</h2>
-          <p>{SUBSCRIPTION_CLAIM} Each ring is that vendor&apos;s own meter.</p>
+
+        <div className="desk-main">
+          <div className="main-head">
+            <h3>Leftover this week</h3>
+            <p>Each ring is that vendor&apos;s own meter.</p>
+          </div>
+
           <div className="rings">
-            <div className="ring">
-              <div className="dial" style={{ ["--left" as string]: "68%" }} />
-              <strong>Grok</strong>
-              <span>own login</span>
-            </div>
-            <div className="ring">
-              <div className="dial" style={{ ["--left" as string]: "41%" }} />
-              <strong>Claude</strong>
-              <span>own login</span>
-            </div>
-            <div className="ring">
-              <div className="dial" style={{ ["--left" as string]: "83%" }} />
-              <strong>Codex</strong>
-              <span>own login</span>
-            </div>
-            <div className="ring">
-              <div className="dial" style={{ ["--left" as string]: "27%" }} />
-              <strong>Cursor</strong>
-              <span>two pools</span>
-            </div>
+            {RINGS.map((ring, index) => (
+              <div
+                className={`ring ${ring.vendor}`}
+                key={ring.vendor}
+                style={{ ["--i" as string]: index }}
+              >
+                <div className="ring-dial">
+                  <svg viewBox="0 0 100 100" aria-hidden="true">
+                    <circle className="ring-track" cx="50" cy="50" r="42" pathLength={100} />
+                    <circle
+                      className="ring-fill"
+                      cx="50"
+                      cy="50"
+                      r="42"
+                      pathLength={100}
+                      style={{ strokeDasharray: `${ring.left} 100` }}
+                    />
+                  </svg>
+                  <span className="ring-pct" data-v={ring.left}>
+                    {ring.left}%
+                  </span>
+                </div>
+                <strong className="ring-name">{ring.name}</strong>
+                <span className="ring-note">own login</span>
+                <span className="ring-bar" aria-hidden="true">
+                  <i style={{ ["--p" as string]: (100 - ring.left) / 100 }} />
+                </span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
