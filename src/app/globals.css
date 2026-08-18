@@ -72,6 +72,9 @@ a {
 .brand img {
   width: 28px;
   height: 28px;
+  max-width: 28px;
+  object-fit: contain;
+  flex: 0 0 28px;
 }
 
 .top-links {
