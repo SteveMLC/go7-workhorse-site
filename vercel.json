@@ -1,0 +1,23 @@
+{
+  "framework": "nextjs",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "go7desk.com" }],
+      "destination": "https://go7workhorse.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.go7desk.com" }],
+      "destination": "https://go7workhorse.com/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.go7workhorse.com" }],
+      "destination": "https://go7workhorse.com/:path*",
+      "permanent": true
+    }
+  ]
+}
