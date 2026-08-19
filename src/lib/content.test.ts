@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
@@ -70,13 +70,28 @@ describe("human pages beyond the door", () => {
     assert.equal(new Set(FEATURE_SECTIONS.map((s) => s.id)).size, FEATURE_SECTIONS.length);
   });
 
-  it("carry real footage of the desk on the features page", () => {
-    const media = FEATURE_SECTIONS.flatMap((s) => s.blocks).filter((b) => b.kind === "video" || b.kind === "image");
-    assert.ok(media.length >= 3);
+  it("carry real footage of the desk, with every file present", () => {
+    const media = ALL_SECTIONS.flatMap((s) => s.blocks).filter((b) => b.kind === "video" || b.kind === "image");
+    assert.ok(media.length >= 6, "footage on the features page and in the guides");
+    const seen = new Set<string>();
     for (const block of media) {
-      assert.ok(block.alt.length > 20, "alt text names what is on screen");
+      assert.ok(block.alt.length > 40, `alt text names what is on screen: ${block.src}`);
       const files = block.kind === "video" ? [`${block.src}.mp4`, `${block.src}.webm`, block.poster] : [block.src];
       for (const file of files) assert.ok(existsSync(join(here, "../../public", file)), `media file ${file}`);
+      assert.equal(seen.has(block.src), false, `${block.src} is used once`);
+      seen.add(block.src);
+    }
+  });
+
+  it("ship no media file the pages stopped using", () => {
+    const used = new Set(
+      ALL_SECTIONS.flatMap((s) => s.blocks).flatMap((b) =>
+        b.kind === "video" ? [`${b.src}.mp4`, `${b.src}.webm`, b.poster] : b.kind === "image" ? [b.src] : [],
+      ),
+    );
+    const dir = join(here, "../../public/media");
+    for (const name of readdirSync(dir)) {
+      assert.ok(used.has(`/media/${name}`), `/media/${name} is referenced by a page`);
     }
   });
 

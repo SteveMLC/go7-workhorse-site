@@ -79,10 +79,10 @@ export const FEATURE_SECTIONS: Section[] = [
         kind: "video",
         src: "/media/providers",
         poster: "/media/providers-poster.webp",
-        width: 404,
-        height: 470,
-        alt: "Chat settings in the desk: the Provider row switches from Grok to Codex and the model list follows.",
-        caption: "One chat, four providers — the model list follows the provider. Kimi K3 and MiniMax M3 in that list are custom bots, added with a URL and a key.",
+        width: 1040,
+        height: 672,
+        alt: "Chat settings in the desk: the Provider row switches through Codex, Grok, MiniMax M3, Cursor and Claude, and the list of available models changes with each one.",
+        caption: "One chat, five bots. Switch the provider and the model list follows; approval behavior and file access sit on the same chat. MiniMax M3 in that list is a custom bot, added with a URL and a key.",
       },
       {
         kind: "p",
@@ -156,12 +156,12 @@ export const FEATURE_SECTIONS: Section[] = [
     blocks: [
       {
         kind: "video",
-        src: "/media/meters",
-        poster: "/media/meters-poster.webp",
-        width: 820,
-        height: 624,
-        alt: "Settings, Watch tab: seven leftover rings, one per bot, with the daily bank toggle above them.",
-        caption: "Real meters, read from each vendor's own numbers. The daily bank hands every bot a slice of its plan per day and carries forward what it did not spend.",
+        src: "/media/usage",
+        poster: "/media/usage-poster.webp",
+        width: 1040,
+        height: 672,
+        alt: "Settings, Usage tab: a leftover ring for each bot — Grok, Codex, Claude, Cursor Composer, Cursor API, MiniMax M3 — above a chart of the current stretch.",
+        caption: "Settings → Usage, read from each vendor's own meter: one ring per bot, Cursor as two pools, and the stretch below by day, week, month or all time.",
       },
       {
         kind: "ul",
@@ -182,12 +182,13 @@ export const FEATURE_SECTIONS: Section[] = [
     title: "Work that outlives a turn",
     blocks: [
       {
-        kind: "image",
-        src: "/media/fanout.png",
-        width: 336,
-        height: 378,
-        alt: "The desk sidebar: one orchestrator chat with seven worker chats nested under it, each on a different model, all done.",
-        caption: "One brief, seven workers. The orchestrator spawned every bot on the desk at once — Codex, Grok, Claude, Cursor twice, and two custom bots — each in its own chat with its own slice, then joined their reports into one list.",
+        kind: "video",
+        src: "/media/fanout",
+        poster: "/media/fanout-poster.webp",
+        width: 1040,
+        height: 672,
+        alt: "One brief typed into a chat. The orchestrator names four workers — Wren on Grok 4.6, Dexter on Fable 5, Marlow on Composer 2.5, Piper on MiniMax M3 — they appear under the chat and run at once, finish, and the desk joins their drafts into one reply.",
+        caption: "One brief, four workers, four models. The orchestrator reads the desk, skips the bot that is low on its weekly plan, gives every other one a slice, and joins their reports into one reply when they finish.",
       },
       {
         kind: "ul",

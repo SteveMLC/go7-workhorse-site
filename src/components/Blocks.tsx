@@ -61,14 +61,22 @@ export function Blocks({ blocks }: { blocks: Block[] }) {
                   <source src={`${block.src}.webm`} type="video/webm" />
                   <source src={`${block.src}.mp4`} type="video/mp4" />
                 </video>
-                {block.caption ? <figcaption>{block.caption}</figcaption> : null}
+                {block.caption ? (
+                  <figcaption>
+                    <Inline text={block.caption} />
+                  </figcaption>
+                ) : null}
               </figure>
             );
           case "image":
             return (
               <figure className="shotfig" key={index}>
                 <img src={block.src} width={block.width} height={block.height} alt={block.alt} loading="lazy" decoding="async" />
-                {block.caption ? <figcaption>{block.caption}</figcaption> : null}
+                {block.caption ? (
+                  <figcaption>
+                    <Inline text={block.caption} />
+                  </figcaption>
+                ) : null}
               </figure>
             );
           case "table":

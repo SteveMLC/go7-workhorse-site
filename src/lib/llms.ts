@@ -147,7 +147,7 @@ export function blocksToText(blocks: Block[]): string {
       out.push(block.head.join(" | "));
       out.push(...block.rows.map((row) => row.map(plainText).join(" | ")));
     } else if (block.kind === "video" || block.kind === "image") {
-      out.push(`[${block.kind}: ${block.alt}${block.caption ? ` — ${block.caption}` : ""}]`);
+      out.push(`[${block.kind}: ${plainText(block.alt)}${block.caption ? ` — ${plainText(block.caption)}` : ""}]`);
     }
   }
   return out.join("\n");

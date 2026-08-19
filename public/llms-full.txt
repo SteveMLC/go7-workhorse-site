@@ -91,7 +91,7 @@ Codex | ACP, plus an App Server | App Server adds native history and capability 
 Cursor | ACP over stdio | Runs cursor-agent
 Custom | HTTP | Any Anthropic Messages or OpenAI Chat Completions endpoint, hosted or local
 Each vendor runs under its own login. Subscriptions, context and sandboxes are never pooled.
-[video: Chat settings in the desk: the Provider row switches from Grok to Codex and the model list follows. — One chat, four providers — the model list follows the provider. Kimi K3 and MiniMax M3 in that list are custom bots, added with a URL and a key.]
+[video: Chat settings in the desk: the Provider row switches through Codex, Grok, MiniMax M3, Cursor and Claude, and the list of available models changes with each one. — One chat, five bots. Switch the provider and the model list follows; approval behavior and file access sit on the same chat. MiniMax M3 in that list is a custom bot, added with a URL and a key.]
 OpenClaw and Hermes are harnesses, not vendors. Settings → LLMs shows whether each is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name openclaw/main or hermes/<profile>. Their tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. An unnamed inbound spawn makes a new chat in Chats, or in a project you pick, titled from the prompt.
 
 ### Chats and projects
@@ -129,7 +129,7 @@ A chat can also read media the agent wrote, so a generated image shows in the tr
 
 ### Spend
 
-[video: Settings, Watch tab: seven leftover rings, one per bot, with the daily bank toggle above them. — Real meters, read from each vendor's own numbers. The daily bank hands every bot a slice of its plan per day and carries forward what it did not spend.]
+[video: Settings, Usage tab: a leftover ring for each bot — Grok, Codex, Claude, Cursor Composer, Cursor API, MiniMax M3 — above a chart of the current stretch. — Settings → Usage, read from each vendor's own meter: one ring per bot, Cursor as two pools, and the stretch below by day, week, month or all time.]
 - Usage recorded per vendor and per chat, from each vendor's own count: the ACP turn total, or the HTTP response's usage block. A turn is estimated at four characters a token only when the vendor sent no count.
 - In is fresh input — what the model read for the first time. Cached is context served back from cache, named apart so a long chat does not read as millions of new tokens. Out is what it wrote.
 - Compact shrinks the context meter. Leftover does not move unless that same bot ran a billed summary. A full window never holds a send the way a spent daily bank does.
@@ -140,7 +140,7 @@ A chat can also read media the agent wrote, so a generated image shows in the tr
 
 ### Work that outlives a turn
 
-[image: The desk sidebar: one orchestrator chat with seven worker chats nested under it, each on a different model, all done. — One brief, seven workers. The orchestrator spawned every bot on the desk at once — Codex, Grok, Claude, Cursor twice, and two custom bots — each in its own chat with its own slice, then joined their reports into one list.]
+[video: One brief typed into a chat. The orchestrator names four workers — Wren on Grok 4.6, Dexter on Fable 5, Marlow on Composer 2.5, Piper on MiniMax M3 — they appear under the chat and run at once, finish, and the desk joins their drafts into one reply. — One brief, four workers, four models. The orchestrator reads the desk, skips the bot that is low on its weekly plan, gives every other one a slice, and joins their reports into one reply when they finish.]
 - Schedules — one-shot and recurring, journalled by the desktop process and recovered after a restart.
 - Goals — long-running intent that survives the chat that started it. A desk goal continues in rounds after a turn ends, until pause, clear, or the round cap; each round is one turn on that chat's vendor. Grok's own /goal is still that vendor's one-shot driver.
 - Loops — spawn a worker cold with only a bounded handoff (seed: fresh). The worker gets no parent conversation and keeps its own vendor, leftover ring and sandbox.
@@ -341,6 +341,7 @@ The desk reads official meters only. A vendor without one, or one that is not an
 
 #### Settings → Watch
 
+[video: Settings, Watch tab: the daily bank and desktop notification rows above a ring for each watched bot, each captioned with the day of its plan week. — Settings → Watch: the daily bank, the desktop notification, and a ring per watched bot with the day of its plan week under it.]
 - Daily bank hands every watched bot a slice of its plan per day and carries forward what it did not spend, so a long Monday does not leave Sunday with nothing. Choose the watched bots. Click Daily bank to change who stays on it.
 - Desktop notification for Watch notices, such as a send hold.
 - /watch shows leftover, daily spend, and send holds. You set the pace.
@@ -364,6 +365,7 @@ Schedules, goals, plans, workers and routing. All journalled, all back after a r
 
 #### Plans and workers
 
+[video: A chat reading All workers finished, then the desk writing one reply that carries each worker's report and closes an open check. — All workers finished. — then the desk writes one reply from what the workers sent back, and says which one owns each finding.]
 - Plans — multi-step work that continues after a worker joins.
 - Subagents — a chat can spawn a Workhorse worker for a slice, on any bot on the desk that can be called. Workers start together unless the caller asked to wait; the desk joins their reports.
 - Each worker has lifecycle records, runtime and token ceilings, cascading cancellation, changed-file review, and worktree isolation where the project supports it.
@@ -374,6 +376,7 @@ Schedules, goals, plans, workers and routing. All journalled, all back after a r
 
 Your own chat keeps the model you picked until you set the provider to Auto — then the desk picks the bot and effort for each message. Work the desk hands out is routed on its own: when a chat spawns a worker without naming a bot, the desk picks the bot and effort for the slice; a named bot is used as named.
 Settings → Routing tunes it, or turns it off:
+[video: Settings, Routing tab: switches for routing desk work, harnesses, local models, weighing leftover and preferring spare, a weekly reserve field, and a Picks now row naming the bot each tier would choose. — Settings → Routing, with Picks now underneath: the bot each tier would pick right now, from the bots on this desk and what they have left.]
 - Route the work the desk hands out — Auto chats only, or Auto chats and spawned workers.
 - Weekly reserve — hold back this much of each bot's week. A bot down to its reserve is skipped.
 - Weigh leftover — score each bot by how far it is under its weekly pace.

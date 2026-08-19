@@ -381,6 +381,15 @@ export const DOCS: Doc[] = [
         title: "Settings → Watch",
         blocks: [
           {
+            kind: "video",
+            src: "/media/watch",
+            poster: "/media/watch-poster.webp",
+            width: 1040,
+            height: 672,
+            alt: "Settings, Watch tab: the daily bank and desktop notification rows above a ring for each watched bot, each captioned with the day of its plan week.",
+            caption: "Settings → Watch: the daily bank, the desktop notification, and a ring per watched bot with the day of its plan week under it.",
+          },
+          {
             kind: "ul",
             items: [
               "**Daily bank** hands every watched bot a slice of its plan per day and carries forward what it did not spend, so a long Monday does not leave Sunday with nothing. Choose the watched bots. Click Daily bank to change who stays on it.",
@@ -436,6 +445,15 @@ export const DOCS: Doc[] = [
         title: "Plans and workers",
         blocks: [
           {
+            kind: "video",
+            src: "/media/verdict",
+            poster: "/media/verdict-poster.webp",
+            width: 1040,
+            height: 672,
+            alt: "A chat reading All workers finished, then the desk writing one reply that carries each worker's report and closes an open check.",
+            caption: "**All workers finished.** — then the desk writes one reply from what the workers sent back, and says which one owns each finding.",
+          },
+          {
             kind: "ul",
             items: [
               "**Plans** — multi-step work that continues after a worker joins.",
@@ -458,6 +476,15 @@ export const DOCS: Doc[] = [
           {
             kind: "p",
             text: "**Settings → Routing** tunes it, or turns it off:",
+          },
+          {
+            kind: "video",
+            src: "/media/routing",
+            poster: "/media/routing-poster.webp",
+            width: 1040,
+            height: 672,
+            alt: "Settings, Routing tab: switches for routing desk work, harnesses, local models, weighing leftover and preferring spare, a weekly reserve field, and a Picks now row naming the bot each tier would choose.",
+            caption: "Settings → Routing, with **Picks now** underneath: the bot each tier would pick right now, from the bots on this desk and what they have left.",
           },
           {
             kind: "ul",
