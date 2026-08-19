@@ -76,6 +76,28 @@ describe("page wires the shipped helpers", () => {
     assert.doesNotMatch(page, /\bcomposer\b/i);
     assert.doesNotMatch(page, /\bchat-input\b/i);
   });
+
+  it("marks download links for hydration-independent analytics capture", () => {
+    const here = dirname(fileURLToPath(import.meta.url));
+    const downloadLink = readFileSync(
+      join(here, "../components/DownloadLink.tsx"),
+      "utf8",
+    );
+    const latestRelease = readFileSync(
+      join(here, "../components/LatestRelease.tsx"),
+      "utf8",
+    );
+    const analytics = readFileSync(
+      join(here, "../components/GoogleAnalytics.tsx"),
+      "utf8",
+    );
+
+    assert.match(downloadLink, /data-analytics-download=\{action\.platform\}/);
+    assert.match(latestRelease, /data-analytics-download=\{card\.platform\}/);
+    assert.match(analytics, /a\[data-analytics-download\]/);
+    assert.match(analytics, /event_callback/);
+    assert.match(analytics, /transport_type: 'beacon'/);
+  });
 });
 
 describe("softwareApplicationJsonLd", () => {

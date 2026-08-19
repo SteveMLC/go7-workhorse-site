@@ -20,6 +20,49 @@ export function GoogleAnalytics() {
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', '${MEASUREMENT_ID}');
+
+          if (!window.__go7WorkhorseDownloadTracking) {
+            window.__go7WorkhorseDownloadTracking = true;
+            document.addEventListener('click', function(event) {
+              var target = event.target;
+              var link = target && target.closest ? target.closest('a[data-analytics-download]') : null;
+              if (!link || !link.href) return;
+
+              var platform = link.getAttribute('data-analytics-download') || 'unknown';
+              var plainPrimaryClick =
+                event.button === 0 &&
+                !event.altKey &&
+                !event.ctrlKey &&
+                !event.metaKey &&
+                !event.shiftKey;
+
+              if (!plainPrimaryClick) {
+                gtag('event', 'download_click', {
+                  platform: platform,
+                  destination_href: link.href,
+                  transport_type: 'beacon'
+                });
+                return;
+              }
+
+              event.preventDefault();
+              var navigated = false;
+              function finish() {
+                if (navigated) return;
+                navigated = true;
+                window.location.assign(link.href);
+              }
+
+              window.setTimeout(finish, 1200);
+              gtag('event', 'download_click', {
+                platform: platform,
+                destination_href: link.href,
+                event_callback: finish,
+                event_timeout: 1000,
+                transport_type: 'beacon'
+              });
+            }, true);
+          }
         `,
         }}
       />
