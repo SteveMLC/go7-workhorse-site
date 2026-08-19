@@ -1,7 +1,7 @@
 "use client";
 
 import type { DownloadAction } from "@/lib/site";
-import { trackDownloadClick } from "@/lib/analytics";
+import { trackDownloadNavigation } from "@/lib/analytics";
 
 type DownloadLinkProps = {
   action: DownloadAction;
@@ -13,8 +13,8 @@ export function DownloadLink({ action, className }: DownloadLinkProps) {
     <a
       className={className}
       href={action.href}
-      onClick={() => {
-        trackDownloadClick(action);
+      onClick={(event) => {
+        trackDownloadNavigation(event, action);
       }}
     >
       {action.label}

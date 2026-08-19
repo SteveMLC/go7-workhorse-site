@@ -5,6 +5,9 @@ export const DOWNLOAD_CLICK_EVENT = "download_click";
 export type DownloadClickEventParams = {
   platform: DownloadAction["platform"];
   destination_href: DownloadAction["href"];
+  event_callback?: () => void;
+  event_timeout?: number;
+  transport_type?: "beacon";
 };
 
 type Gtag = (
@@ -21,15 +24,24 @@ declare global {
 
 export function downloadClickEventParams(
   download: Pick<DownloadAction, "platform" | "href">,
+  options: Pick<
+    DownloadClickEventParams,
+    "event_callback" | "event_timeout" | "transport_type"
+  > = {},
 ): DownloadClickEventParams {
   return {
     platform: download.platform,
     destination_href: download.href,
+    ...options,
   };
 }
 
 export function trackDownloadClick(
   download: Pick<DownloadAction, "platform" | "href">,
+  options: Pick<
+    DownloadClickEventParams,
+    "event_callback" | "event_timeout" | "transport_type"
+  > = {},
 ): boolean {
   if (typeof window === "undefined" || typeof window.gtag !== "function") {
     return false;
@@ -38,7 +50,57 @@ export function trackDownloadClick(
   window.gtag(
     "event",
     DOWNLOAD_CLICK_EVENT,
-    downloadClickEventParams(download),
+    downloadClickEventParams(download, options),
   );
   return true;
+}
+
+type DownloadClickEvent = {
+  button: number;
+  altKey: boolean;
+  ctrlKey: boolean;
+  metaKey: boolean;
+  shiftKey: boolean;
+  preventDefault: () => void;
+};
+
+export function trackDownloadNavigation(
+  event: DownloadClickEvent,
+  download: Pick<DownloadAction, "platform" | "href">,
+): void {
+  const plainPrimaryClick =
+    event.button === 0 &&
+    !event.altKey &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    !event.shiftKey;
+
+  if (!plainPrimaryClick) {
+    trackDownloadClick(download);
+    return;
+  }
+
+  const navigate = () => {
+    window.location.assign(download.href);
+  };
+
+  if (typeof window === "undefined" || typeof window.gtag !== "function") {
+    return;
+  }
+
+  event.preventDefault();
+
+  let navigated = false;
+  const finish = () => {
+    if (navigated) return;
+    navigated = true;
+    navigate();
+  };
+
+  window.setTimeout(finish, 1200);
+  trackDownloadClick(download, {
+    event_callback: finish,
+    event_timeout: 1000,
+    transport_type: "beacon",
+  });
 }

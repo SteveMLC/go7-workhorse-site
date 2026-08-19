@@ -7,7 +7,7 @@ import {
   parseLatestRelease,
   type LatestRelease as Latest,
 } from "@/lib/release";
-import { trackDownloadClick } from "@/lib/analytics";
+import { trackDownloadNavigation } from "@/lib/analytics";
 import { RELEASES_INDEX_URL } from "@/lib/pages";
 import { downloadAction, RELEASES_URL } from "@/lib/site";
 
@@ -110,8 +110,11 @@ export function LatestRelease() {
             data-mine={card.platform === "mac" ? "For this Mac" : "For this PC"}
             href={card.href}
             key={card.key}
-            onClick={() => {
-              trackDownloadClick({ platform: card.platform, href: card.href });
+            onClick={(event) => {
+              trackDownloadNavigation(event, {
+                platform: card.platform,
+                href: card.href,
+              });
             }}
           >
             <span className="dl-os">{card.os}</span>
