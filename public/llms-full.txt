@@ -91,7 +91,7 @@ Codex | ACP, plus an App Server | App Server adds native history and capability 
 Cursor | ACP over stdio | Runs cursor-agent
 Custom | HTTP | Any Anthropic Messages or OpenAI Chat Completions endpoint, hosted or local
 Each vendor runs under its own login. Subscriptions, context and sandboxes are never pooled.
-[video: Chat settings in the desk: the Provider row switches from Grok to Codex and the model list follows. — One chat, four providers — the model list follows the provider. Kimi K3 and MiniMax M3 in that list are custom bots, added with a URL and a key.]
+[video: Chat settings in the desk: the Provider row switches between Codex, Grok, MiniMax M3, Cursor and Claude, and the model list follows each time. — One chat, five bots. Chat settings switch the provider and the model list follows; approval behavior and file access sit on the same chat. MiniMax M3 is a custom bot, added with a URL and a key.]
 OpenClaw and Hermes are harnesses, not vendors. Settings → LLMs shows whether each is installed. A plan can grant them for one wave, or you can name openclaw/main or hermes/<profile>. Their tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked.
 
 ### Chats and projects
@@ -128,7 +128,7 @@ A chat can also read media the agent wrote, so a generated image shows in the tr
 
 ### Spend
 
-[video: Settings, Watch tab: seven leftover rings, one per bot, with the daily bank toggle above them. — Real meters, read from each vendor's own numbers. The daily bank hands every bot a slice of its plan per day and carries forward what it did not spend.]
+[video: Settings, Usage tab: six leftover rings, one per bot — Grok, Codex, Claude, Cursor Composer, Cursor API, MiniMax M3 — over a usage chart for the stretch. — Settings → Usage, read from each vendor's own meter: a ring per bot, Cursor as two pools, and the stretch below it by day, week, month or all time.]
 - Usage recorded per vendor and per chat, from each vendor's own count: the ACP turn total, or the HTTP response's usage block. A turn is estimated at four characters a token only when the vendor sent no count.
 - In is fresh input — what the model read for the first time. Cached is context served back from cache, named apart so a long chat does not read as millions of new tokens. Out is what it wrote.
 - Budgets per vendor.
@@ -138,7 +138,7 @@ A chat can also read media the agent wrote, so a generated image shows in the tr
 
 ### Work that outlives a turn
 
-[image: The desk sidebar: one orchestrator chat with seven worker chats nested under it, each on a different model, all done. — One brief, seven workers. The orchestrator spawned every bot on the desk at once — Codex, Grok, Claude, Cursor twice, and two custom bots — each in its own chat with its own slice, then joined their reports into one list.]
+[video: One brief typed into a chat; the orchestrator spawns four named workers — Wren on Grok 4.6, Dexter on Fable 5, Marlow on Composer 2.5, Piper on MiniMax M3 — they run at once in the sidebar, finish, and the desk joins their drafts into one reply. — One brief, four workers, four models. The orchestrator lists the bots, skips the one that is low on its weekly plan, spawns one worker per slice, and the desk joins their reports into one reply when they finish. Recorded as-is on a clean install of 0.6.7.]
 - Schedules — one-shot and recurring, journalled by the desktop process and recovered after a restart.
 - Goals — long-running intent that survives the chat that started it.
 - Subagents — lifecycle records, runtime and token ceilings, cascading cancellation, changed-file review, and worktree isolation where the project supports it. A worker gets a worker's context: the short worker rules and only the desk tools it may call.
