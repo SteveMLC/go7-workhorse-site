@@ -1,0 +1,26 @@
+# Keep the static export fresh between pushes: the changelog and download page
+# are rendered at build time from GitHub Releases, and the desk ships several
+# times a day. Add a Vercel Deploy Hook URL as the repo secret
+# VERCEL_DEPLOY_HOOK (Vercel → Project → Settings → Git → Deploy Hooks) and this
+# asks Vercel for a fresh production build every six hours. Without the secret
+# it does nothing.
+name: Rebuild the site
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask Vercel for a fresh build
+        env:
+          HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "VERCEL_DEPLOY_HOOK is not set; nothing to do."
+            exit 0
+          fi
+          curl -fsS -X POST "$HOOK" -o /dev/null -w "Vercel answered %{http_code}\n"

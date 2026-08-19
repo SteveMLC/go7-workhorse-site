@@ -12,7 +12,7 @@ export const FEATURE_LIST: string[] = [
   "Custom bots from any Anthropic Messages or OpenAI Chat Completions endpoint, hosted or local",
   "Permission modes, sandbox profiles and one permission inbox",
   "Chats run in a linked folder or a managed git worktree; chat-scoped terminal; git review",
-  "Schedules, goals, plans and subagents journalled and recovered after a restart",
+  "Schedules, goals that continue in rounds, loops from a bounded handoff, plans and subagents journalled and recovered after a restart",
   "Routing that can pick a bot and effort per message, or stay off",
   "Private learning memory in SQLite on your own disk; export or wipe it",
   "Skills, MCP servers and a / palette",

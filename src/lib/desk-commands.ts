@@ -31,6 +31,7 @@ export const DESK_COMMANDS: DeskCommand[] = [
   { name: "/watch", hint: "Leftover, daily spend, and send holds" },
   { name: "/schedule", hint: "Run later or repeat, e.g. /schedule every 30m check build", takes: "[every] 30m prompt" },
   { name: "/goal", hint: "Set or manage a quiet Workhorse goal", takes: "objective | status | pause | resume | clear" },
+  { name: "/loop", hint: "Run a bounded Workhorse goal loop", takes: "objective | status | pause | resume | clear" },
   { name: "/quit", hint: "Close Workhorse", aliases: ["/exit"] },
 ];
 

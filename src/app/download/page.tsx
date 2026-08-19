@@ -69,7 +69,7 @@ export default function DownloadPage() {
           </section>
           <section className="doc-section" id="linux">
             <h2>Linux</h2>
-            <p>Builds and tests in CI. No installer yet.</p>
+            <p>No installer yet.</p>
           </section>
         </article>
 

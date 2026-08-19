@@ -86,7 +86,7 @@ export const FEATURE_SECTIONS: Section[] = [
       },
       {
         kind: "p",
-        text: "OpenClaw and Hermes are harnesses, not vendors. Settings → LLMs shows whether each is installed. A plan can grant them for one wave, or you can name `openclaw/main` or `hermes/<profile>`. Their tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked.",
+        text: "OpenClaw and Hermes are harnesses, not vendors. Settings → LLMs shows whether each is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name `openclaw/main` or `hermes/<profile>`. Their tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. An unnamed inbound spawn makes a new chat in Chats, or in a project you pick, titled from the prompt.",
       },
     ],
   },
@@ -104,6 +104,7 @@ export const FEATURE_SECTIONS: Section[] = [
           "Rewind to an earlier turn.",
           "A portable transcript follows a chat when its vendor changes.",
           "Search runs over chat titles and message text across every project.",
+          "A parent with workers folds them on the count button; they ease open and closed.",
           "A turn's work stays on one compact line while it runs. Open it for the ordered detail: think, tools, think. Consecutive tool calls share one fold; a later thought starts a new hop.",
         ],
       },
@@ -167,6 +168,7 @@ export const FEATURE_SECTIONS: Section[] = [
         items: [
           "Usage recorded per vendor and per chat, from each vendor's own count: the ACP turn total, or the HTTP response's usage block. A turn is estimated at four characters a token only when the vendor sent no count.",
           "**In** is fresh input — what the model read for the first time. **Cached** is context served back from cache, named apart so a long chat does not read as millions of new tokens. **Out** is what it wrote.",
+          "Compact shrinks the context meter. Leftover does not move unless that same bot ran a billed summary. A full window never holds a send the way a spent daily bank does.",
           "Budgets per vendor.",
           "A weekly pace that tells you when you are ahead of it, before the bill does.",
           "A daily bank that hands every bot a slice of its plan per day and carries forward what it did not spend.",
@@ -192,7 +194,9 @@ export const FEATURE_SECTIONS: Section[] = [
         kind: "ul",
         items: [
           "**Schedules** — one-shot and recurring, journalled by the desktop process and recovered after a restart.",
-          "**Goals** — long-running intent that survives the chat that started it.",
+          "**Goals** — long-running intent that survives the chat that started it. A desk goal continues in rounds after a turn ends, until pause, clear, or the round cap; each round is one turn on that chat's vendor. Grok's own `/goal` is still that vendor's one-shot driver.",
+          "**Loops** — spawn a worker cold with only a bounded handoff (`seed: fresh`). The worker gets no parent conversation and keeps its own vendor, leftover ring and sandbox.",
+          "**Turn log** — a chat can rebuild model history from its own turn and step log. The log is per chat and never shared across vendors.",
           "**Subagents** — lifecycle records, runtime and token ceilings, cascading cancellation, changed-file review, and worktree isolation where the project supports it. A worker gets a worker's context: the short worker rules and only the desk tools it may call.",
           "**Plans** — multi-step work that continues after a worker joins.",
           "**Routing** — your own chat keeps the model you picked until you set it to **Auto**; Auto picks the bot and effort for each message. When a chat spawns a worker without naming a bot, the desk picks the bot and effort for the slice. Settings → Routing turns that off, and tunes how any routing weighs leftover, reserve, and local models.",
@@ -225,8 +229,8 @@ export const FEATURE_SECTIONS: Section[] = [
         items: [
           "**Skills** — two ship with the desk, `desk` for chat-to-chat control and `setup` for adding bots and references. Skills are also listed from Grok, Codex, Claude and Cursor homes, and can be pushed back to a vendor.",
           "**MCP servers** — attached to a runtime, with the same approval and result path as built-in tools.",
-          "**Custom bots** — a pasted URL and key become a first-class bot with its own name and colour. Testing the connection asks the provider which models it serves; tick the ones you want. One key is one bot and one leftover ring, however many models it offers.",
-          "**The `/` palette** — new, project, link, model, effort, compact, plan, sandbox, usage, watch, schedule, goal, skills, review, context, rewind, export, memory, hooks, plugins, workflows, and more.",
+          "**Custom bots** — a pasted URL and key become a first-class bot with its own name and colour. Testing the connection asks the provider which models it serves; large catalogs are grouped, frontier-first, searchable, and explicitly approved. One key keeps one leftover ring with separate model rows.",
+          "**The `/` palette** — new, project, link, model, effort, compact, plan, sandbox, usage, watch, schedule, goal, loop, skills, review, context, rewind, export, memory, hooks, plugins, workflows, and more.",
         ],
       },
     ],
@@ -241,7 +245,7 @@ export const FEATURE_SECTIONS: Section[] = [
         items: [
           "The profile shows the Workhorse mark as tiny moving blobs of the bots you have called. Spend sets how many of each colour.",
           "Settings can export a support report that excludes prompts, messages, file contents, environment variables, URLs and credential values.",
-          "Settings → Profile can check GitHub for a newer desk. A Mac installer downloads that release's disk image and replaces the app.",
+          "Settings → Profile can check GitHub for a newer desk. A Mac installer downloads that release's disk image, replaces the app, and opens it. A Windows installer downloads the Setup exe, installs after Workhorse quits, and opens the new build. When one is ready, a blue update control appears at the far right of Settings; hover it for Update now and the version it will install.",
         ],
       },
     ],
@@ -252,7 +256,7 @@ export const FEATURE_SECTIONS: Section[] = [
     blocks: [
       {
         kind: "p",
-        text: "Windows and macOS. Both installers are built and tested on their own machine for every release. Linux builds and tests in CI but has no installer yet.",
+        text: "Windows and macOS. Both installers are built and tested on their own machine for every release. No Linux installer yet.",
       },
     ],
   },
@@ -295,11 +299,11 @@ export const FAQ: Faq[] = [
   },
   {
     q: "Is there a Linux build?",
-    a: "Not yet. Linux builds and tests in CI, but installers ship for Windows and macOS.",
+    a: "Not yet. Installers ship for Windows and macOS.",
   },
   {
     q: "How do updates arrive?",
-    a: "Settings → Profile checks GitHub for a newer desk. On a Mac the installer downloads that release's disk image and replaces the app. Windows keeps the same app identity and encrypted vault across updates.",
+    a: "Settings → Profile checks GitHub for a newer desk, and a blue update control appears at the far right of Settings when one is ready. On a Mac the installer downloads that release's disk image, replaces the app, and opens it. On Windows it downloads the Setup exe, installs after Workhorse quits, and opens the new build. Projects, chats and the encrypted vault carry across.",
   },
 ];
 

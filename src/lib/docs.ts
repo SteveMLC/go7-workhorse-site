@@ -51,7 +51,7 @@ export const DOCS: Doc[] = [
             kind: "p",
             text: "**Windows.** Run `Go7-Workhorse-Setup-<version>.exe`. It adds Start-menu and Desktop shortcuts and keeps your projects and chats across updates.",
           },
-          { kind: "p", text: "**Linux.** Builds and tests in CI. No installer yet." },
+          { kind: "p", text: "**Linux.** No installer yet." },
         ],
       },
       {
@@ -169,7 +169,7 @@ export const DOCS: Doc[] = [
         blocks: [
           {
             kind: "p",
-            text: "OpenClaw and Hermes are **harnesses**, not vendors. **Settings → LLMs** shows whether each runtime is installed. A plan can grant them for one wave, or you can name `openclaw/main` or `hermes/<profile>`; those tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. **Settings → LLMs → Install MCP** writes a restricted Workhorse server into OpenClaw's `mcp.servers` (and Hermes's `mcp_servers` if Hermes is installed) so those apps can list, read and ask chats, and spawn a Workhorse worker on a chat you pick. No token is stored.",
+            text: "OpenClaw and Hermes are **harnesses**, not vendors. **Settings → LLMs** shows whether each runtime is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name `openclaw/main` or `hermes/<profile>`; those tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. **Settings → LLMs → Install MCP** writes a restricted Workhorse server into OpenClaw's `mcp.servers` (and Hermes's `mcp_servers` if Hermes is installed) so those apps can list, read and ask chats, and spawn a Workhorse worker on a chat you pick. No token is stored.",
           },
         ],
       },
@@ -206,9 +206,9 @@ export const DOCS: Doc[] = [
               "**Chat settings** sit on the chat: **Provider**, **Available models**, **Reasoning level**, **Approval behavior**, **File access**, **Environment**. Nothing here is per app.",
               "**Fork** (`/fork`) branches this chat from the latest turn to try a different model on the same history. When the project has a Git folder, the fork gets its own isolated worktree — the same isolation subagents use.",
               "**Rewind** to an earlier turn.",
-              "A portable transcript follows a chat when its vendor changes, and portable checkpoints restore compacted context for vendors without native compaction. `/compact` compresses the context with an optional keep-note.",
+              "A portable transcript follows a chat when its vendor changes. `/compact` compresses the context with an optional keep-note; it shrinks the context meter, and leftover does not move unless that bot ran a billed summary.",
               "**Search all chats** from the sidebar runs over titles and message text across every project.",
-              "Each chat row shows how old the last prompt is — `25m`, `2h`, `3d`. Hover for the full time.",
+              "Each chat row shows how old the last prompt is — `25m`, `2h`, `3d`. Hover for the full time. A parent with workers folds them on the count button.",
             ],
           },
         ],
@@ -414,7 +414,20 @@ export const DOCS: Doc[] = [
         blocks: [
           {
             kind: "p",
-            text: "`/goal <objective>` sets a quiet, long-running intent that survives the chat that started it. `/goal status`, `/goal pause`, `/goal resume`, `/goal clear` manage it. The **Active goal** bar shows what is running; **Clear goal** ends it.",
+            text: "`/goal <objective>` sets a quiet, long-running intent that survives the chat that started it. A desk goal continues in rounds after a turn ends — each round is one turn on that chat's vendor — until `/goal pause`, `/goal clear`, or the round cap. `/goal status` and `/goal resume` manage it; the **Active goal** bar shows what is running and **Clear goal** ends it. In a Grok chat, `/goal` is Grok's own one-shot driver.",
+          },
+        ],
+      },
+      {
+        id: "loops",
+        title: "Loops and the turn log",
+        blocks: [
+          {
+            kind: "ul",
+            items: [
+              "`/loop <objective>` runs a bounded Workhorse goal loop: it spawns a worker cold with only a bounded handoff (`seed: fresh`). The worker gets no parent conversation and keeps its own vendor, leftover ring and sandbox. `/loop status`, `pause`, `resume`, `clear` manage it.",
+              "A chat can rebuild model history from its own turn and step log. The log is per chat and never shared across vendors.",
+            ],
           },
         ],
       },
@@ -578,7 +591,7 @@ export const DOCS: Doc[] = [
           },
           {
             kind: "p",
-            text: "Grok chats also carry the Grok CLI's own commands — `/context`, `/rewind`, `/export`, `/memory`, `/hooks`, `/plugins`, `/workflows`, `/imagine`, `/deep-research` and the rest — as Grok ships them. In a Grok chat, `/goal` is Grok's own goal.",
+            text: "Grok chats also carry the Grok CLI's own commands — `/context`, `/rewind`, `/export`, `/memory`, `/hooks`, `/plugins`, `/workflows`, `/imagine`, `/deep-research` and the rest — as Grok ships them. In a Grok chat, `/goal` is Grok's own one-shot goal and `/loop` runs a prompt on a schedule; the desk's `/goal` and `/loop` above belong to every other vendor.",
           },
         ],
       },
@@ -665,9 +678,9 @@ export const DOCS: Doc[] = [
           {
             kind: "ul",
             items: [
-              "**Settings → Profile** checks GitHub for a newer desk.",
-              "On a Mac, the installer downloads that release's disk image and replaces the app. One macOS approval sticks across updates.",
-              "On Windows, the same app identity and encrypted vault carry across updates; the installer keeps projects and chats.",
+              "**Settings → Profile** checks GitHub for a newer desk. When one is ready, a blue update control appears at the far right of Settings; hover it for **Update now** and the version it will install.",
+              "On a Mac, the installer downloads that release's disk image, replaces the app, and opens it. One macOS approval sticks across updates.",
+              "On Windows, the installer downloads the Setup exe, installs after Workhorse quits, and opens the new build. The same app identity and encrypted vault carry across; projects and chats stay.",
               "Both installers are built and tested on their own machine for every release.",
             ],
           },
