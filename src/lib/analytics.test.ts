@@ -2,9 +2,12 @@ import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
 import {
   DOWNLOAD_CLICK_EVENT,
+  LLMS_TXT_CLICK_EVENT,
+  REPO_CLICK_EVENT,
   downloadClickEventParams,
   trackDownloadClick,
   trackDownloadNavigation,
+  trackOutboundClick,
 } from "./analytics.ts";
 
 const originalWindow = globalThis.window;
@@ -125,5 +128,47 @@ describe("download click analytics", () => {
       assigned,
       "https://github.com/go7studio/Go7-Workhorse/releases/latest",
     );
+  });
+});
+
+describe("outbound click analytics", () => {
+  it("names the events correctly", () => {
+    assert.equal(REPO_CLICK_EVENT, "repo_click");
+    assert.equal(LLMS_TXT_CLICK_EVENT, "llms_txt_click");
+  });
+
+  it("does nothing when gtag is unavailable", () => {
+    globalThis.window = {} as Window & typeof globalThis;
+    assert.equal(
+      trackOutboundClick(REPO_CLICK_EVENT, "https://github.com/go7studio/Go7-Workhorse"),
+      false,
+    );
+  });
+
+  it("fires repo_click with destination_href when gtag exists", () => {
+    const calls: Array<[string, string, Record<string, unknown>]> = [];
+    globalThis.window = {
+      gtag: (command: string, eventName: string, params: Record<string, unknown>) => {
+        calls.push([command, eventName, params]);
+      },
+    } as Window & typeof globalThis;
+
+    const href = "https://github.com/go7studio/Go7-Workhorse";
+    assert.equal(trackOutboundClick(REPO_CLICK_EVENT, href), true);
+    assert.deepEqual(calls, [["event", REPO_CLICK_EVENT, { destination_href: href }]]);
+  });
+
+  it("fires llms_txt_click for the llms.txt link", () => {
+    const calls: Array<[string, string, Record<string, unknown>]> = [];
+    globalThis.window = {
+      gtag: (command: string, eventName: string, params: Record<string, unknown>) => {
+        calls.push([command, eventName, params]);
+      },
+    } as Window & typeof globalThis;
+
+    const href = "https://go7workhorse.com/llms.txt";
+    assert.equal(trackOutboundClick(LLMS_TXT_CLICK_EVENT, href), true);
+    assert.equal(calls[0][1], LLMS_TXT_CLICK_EVENT);
+    assert.equal((calls[0][2] as Record<string, string>).destination_href, href);
   });
 });

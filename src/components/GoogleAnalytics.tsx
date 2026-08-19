@@ -56,6 +56,18 @@ export function GoogleAnalytics() {
               }, 700);
             }, true);
           }
+
+          if (!window.__go7WorkhorseOutboundTracking) {
+            window.__go7WorkhorseOutboundTracking = true;
+            document.addEventListener('click', function(event) {
+              var target = event.target;
+              var link = target && target.closest ? target.closest('a[data-analytics-outbound]') : null;
+              if (!link || !link.href) return;
+              var eventName = link.getAttribute('data-analytics-outbound');
+              if (!eventName) return;
+              gtag('event', eventName, { destination_href: link.href });
+            }, true);
+          }
         `,
         }}
       />

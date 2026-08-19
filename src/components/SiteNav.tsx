@@ -19,6 +19,7 @@ export function SiteNav({ current = "/" }: { current?: string }) {
               href={link.href}
               aria-current={link.href === current ? "page" : undefined}
               className={link.href.startsWith("http") ? "nav-ext" : undefined}
+              data-analytics-outbound={link.analyticsEvent}
             >
               {link.label}
             </a>

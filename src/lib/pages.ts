@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DESK_LINE, PRODUCT_NAME, RELEASES_URL, REPO_URL, SITE_ORIGIN } from "./site.ts";
+import { LLMS_TXT_CLICK_EVENT, REPO_CLICK_EVENT } from "./analytics.ts";
 
 /** Every human page on the site. Add here, and the nav, footer, sitemap and llms.txt follow. */
 export const PAGES = {
@@ -45,23 +46,29 @@ export const RELEASES_INDEX_URL = `${REPO_URL}/releases`;
 export const MAC_INSTALL_SCRIPT =
   "curl -fsSL https://raw.githubusercontent.com/go7studio/Go7-Workhorse/main/scripts/install-mac.sh | bash";
 
+export type SiteLink = {
+  href: string;
+  label: string;
+  analyticsEvent?: string;
+};
+
 /** Text links in the top bar, in order. The Download pill is added by the nav itself. */
-export const NAV_LINKS = [
+export const NAV_LINKS: readonly SiteLink[] = [
   { href: PAGES.features.path, label: PAGES.features.label },
   { href: PAGES.docs.path, label: PAGES.docs.label },
-  { href: REPO_URL, label: "Public repo" },
-] as const;
+  { href: REPO_URL, label: "Public repo", analyticsEvent: REPO_CLICK_EVENT },
+];
 
-export const FOOTER_LINKS = [
+export const FOOTER_LINKS: readonly SiteLink[] = [
   { href: PAGES.features.path, label: PAGES.features.label },
   { href: PAGES.docs.path, label: PAGES.docs.label },
   { href: PAGES.download.path, label: PAGES.download.label },
   { href: PAGES.changelog.path, label: PAGES.changelog.label },
-  { href: RELEASES_INDEX_URL, label: "Releases" },
-  { href: REPO_URL, label: "Public repo" },
+  { href: RELEASES_INDEX_URL, label: "Releases", analyticsEvent: REPO_CLICK_EVENT },
+  { href: REPO_URL, label: "Public repo", analyticsEvent: REPO_CLICK_EVENT },
   { href: GO7STUDIO_URL, label: "go7studio.com" },
-  { href: "/llms.txt", label: "llms.txt" },
-] as const;
+  { href: "/llms.txt", label: "llms.txt", analyticsEvent: LLMS_TXT_CLICK_EVENT },
+];
 
 export function absoluteUrl(path: string): string {
   return path.startsWith("http") ? path : `${SITE_ORIGIN}${path}`;

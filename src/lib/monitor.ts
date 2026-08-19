@@ -1,11 +1,11 @@
-import { DOWNLOAD_CLICK_EVENT } from "./analytics";
+import { DOWNLOAD_CLICK_EVENT, LLMS_TXT_CLICK_EVENT, REPO_CLICK_EVENT } from "./analytics";
 import { softwareApplicationJsonLd } from "./site";
 
 // The production GA4 measurement id. Locked here so the monitor fails loudly if
 // the deployed site ever stops loading this exact stream.
 export const GA_MEASUREMENT_ID = "G-VCG5F1M7MB";
 
-export type CheckId = "http" | "ga4" | "json_ld" | "download_event";
+export type CheckId = "http" | "ga4" | "json_ld" | "download_event" | "outbound_events";
 
 export type CheckResult = {
   id: CheckId;
@@ -135,12 +135,30 @@ export function checkDownloadEvent(scripts: string, html: string = ""): CheckRes
   };
 }
 
+const OUTBOUND_EVENT_NAMES = [REPO_CLICK_EVENT, LLMS_TXT_CLICK_EVENT] as const;
+
+export function checkOutboundEvents(html: string, scripts: string = ""): CheckResult {
+  const missing = OUTBOUND_EVENT_NAMES.filter(
+    (name) => !html.includes(name) && !scripts.includes(name),
+  );
+  const ok = missing.length === 0;
+  return {
+    id: "outbound_events",
+    label: "outbound click events",
+    ok,
+    detail: ok
+      ? `${OUTBOUND_EVENT_NAMES.join(", ")} found in deployed output`
+      : `missing in deployed output: ${missing.join(", ")}`,
+  };
+}
+
 export function evaluateSnapshot(snapshot: SiteSnapshot): MonitorReport {
   const checks = [
     checkHttp(snapshot.status),
     checkGa4(snapshot.html),
     checkSoftwareApplication(snapshot.html),
     checkDownloadEvent(snapshot.scripts, snapshot.html),
+    checkOutboundEvents(snapshot.html, snapshot.scripts),
   ];
   return {
     url: snapshot.url,

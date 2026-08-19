@@ -64,7 +64,7 @@ export default function HomePage() {
           </div>
 
           <p className="repo rise" style={{ ["--i" as string]: 6 }}>
-            <a className="more" href={model.repoUrl}>
+            <a className="more" href={model.repoUrl} data-analytics-outbound="repo_click">
               {model.repoLabel}
               <span aria-hidden="true">›</span>
             </a>

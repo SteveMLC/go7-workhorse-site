@@ -10,7 +10,7 @@ export function SiteFooter() {
       </span>
       <nav className="foot-links" aria-label="Footer">
         {FOOTER_LINKS.map((link) => (
-          <a key={link.href} href={link.href}>
+          <a key={link.href} href={link.href} data-analytics-outbound={link.analyticsEvent}>
             {link.label}
           </a>
         ))}

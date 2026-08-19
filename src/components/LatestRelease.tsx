@@ -98,7 +98,7 @@ export function LatestRelease() {
     <div className="dl" data-state={latest ? "live" : "static"}>
       <p className="dl-meta">
         <span>{stamp}</span>
-        <a href={latest?.notesUrl || RELEASES_URL}>
+        <a href={latest?.notesUrl || RELEASES_URL} data-analytics-outbound="repo_click">
           Release notes<span aria-hidden="true">›</span>
         </a>
       </p>
@@ -121,7 +121,7 @@ export function LatestRelease() {
         ))}
       </div>
       <p className="dl-all">
-        <a href={RELEASES_INDEX_URL}>
+        <a href={RELEASES_INDEX_URL} data-analytics-outbound="repo_click">
           All releases<span aria-hidden="true">›</span>
         </a>
       </p>

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { DOWNLOAD_CLICK_EVENT } from "./analytics.ts";
+import { DOWNLOAD_CLICK_EVENT, LLMS_TXT_CLICK_EVENT, REPO_CLICK_EVENT } from "./analytics.ts";
 import {
   PRODUCT_NAME,
   RELEASES_URL,
@@ -12,6 +12,7 @@ import {
   checkDownloadEvent,
   checkGa4,
   checkHttp,
+  checkOutboundEvents,
   checkSoftwareApplication,
   evaluateSnapshot,
   extractJsonLd,
@@ -20,14 +21,16 @@ import {
   type SiteSnapshot,
 } from "./monitor.ts";
 
-// A document shaped like the deployed head: escaped JSON-LD block and the gtag
-// loader, built from the same helpers the site ships.
+// A document shaped like the deployed head: escaped JSON-LD block, the gtag
+// loader, and the outbound event names that ship in the inline init script.
 function liveLikeHtml(): string {
   return [
     "<!doctype html><html><head>",
     `<script type="application/ld+json">${softwareApplicationJsonLdScript()}</script>`,
     `<script async src="${gaLoaderUrl()}"></script>`,
-    `<script>gtag('config','${GA_MEASUREMENT_ID}')</script>`,
+    `<script>gtag('config','${GA_MEASUREMENT_ID}');` +
+      `document.addEventListener('click',function(e){gtag('event','${REPO_CLICK_EVENT}',{});` +
+      `gtag('event','${LLMS_TXT_CLICK_EVENT}',{});});</script>`,
     "</head><body>ok</body></html>",
   ].join("");
 }
@@ -126,10 +129,10 @@ describe("monitor — full snapshot", () => {
   it("passes when every signal is live", () => {
     const report = evaluateSnapshot(goodSnapshot());
     assert.equal(report.ok, true);
-    assert.equal(report.checks.length, 4);
+    assert.equal(report.checks.length, 5);
     assert.deepEqual(
       report.checks.map((check) => check.id),
-      ["http", "ga4", "json_ld", "download_event"],
+      ["http", "ga4", "json_ld", "download_event", "outbound_events"],
     );
   });
 
@@ -155,5 +158,44 @@ describe("monitor — full snapshot", () => {
     assert.match(text, /^Go7 Workhorse live monitor — https:\/\/go7workhorse\.com/);
     assert.match(text, /Result: PASS/);
     assert.match(text, /\[PASS\] GA4 measurement id/);
+  });
+});
+
+describe("monitor — outbound click events", () => {
+  it("passes when both event names appear in the HTML", () => {
+    const result = checkOutboundEvents(liveLikeHtml());
+    assert.equal(result.ok, true);
+    assert.match(result.detail, /repo_click/);
+    assert.match(result.detail, /llms_txt_click/);
+  });
+
+  it("fails when both event names are absent", () => {
+    const result = checkOutboundEvents("<html><body>nothing</body></html>");
+    assert.equal(result.ok, false);
+    assert.match(result.detail, /missing/);
+    assert.match(result.detail, /repo_click/);
+    assert.match(result.detail, /llms_txt_click/);
+  });
+
+  it("fails when only one event name is missing", () => {
+    const html = `<script>gtag('event','${REPO_CLICK_EVENT}',{})</script>`;
+    const result = checkOutboundEvents(html);
+    assert.equal(result.ok, false);
+    assert.match(result.detail, /llms_txt_click/);
+    assert.doesNotMatch(result.detail, /repo_click/);
+  });
+
+  it("accepts event names found in the scripts argument instead of html", () => {
+    const scripts = `gtag('event','${REPO_CLICK_EVENT}');gtag('event','${LLMS_TXT_CLICK_EVENT}');`;
+    const result = checkOutboundEvents("", scripts);
+    assert.equal(result.ok, true);
+  });
+
+  it("fails the full snapshot when outbound events go missing", () => {
+    const snapshot = { ...goodSnapshot(), html: goodSnapshot().html.replace(REPO_CLICK_EVENT, "").replace(LLMS_TXT_CLICK_EVENT, "") };
+    const report = evaluateSnapshot(snapshot);
+    assert.equal(report.ok, false);
+    const failed = report.checks.find((c) => !c.ok);
+    assert.equal(failed?.id, "outbound_events");
   });
 });
