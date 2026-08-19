@@ -18,20 +18,24 @@ export function GoogleAnalytics() {
           __html: `
           window.dataLayer = window.dataLayer || [];
           function gtag(){window.dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', '${MEASUREMENT_ID}');
 
-          function go7WorkhorseClickParams(link) {
-            var linkText = link.textContent ? link.textContent.replace(/\\s+/g, ' ').trim() : '';
-            return {
-              destination_href: link.href,
-              page_location: window.location.href,
-              link_text: linkText ? linkText.slice(0, 100) : undefined
-            };
-          }
+          // One guard wraps config + listeners. A duplicate <GoogleAnalytics />
+          // mount (nested layout, future code path) would otherwise fire two
+          // config calls and two page-view beacons per visit.
+          if (!window.__go7WorkhorseGa) {
+            window.__go7WorkhorseGa = true;
+            gtag('js', new Date());
+            gtag('config', '${MEASUREMENT_ID}');
 
-          if (!window.__go7WorkhorseDownloadTracking) {
-            window.__go7WorkhorseDownloadTracking = true;
+            function go7WorkhorseClickParams(link) {
+              var linkText = link.textContent ? link.textContent.replace(/\\s+/g, ' ').trim() : '';
+              return {
+                destination_href: link.href,
+                page_location: window.location.href,
+                link_text: linkText ? linkText.slice(0, 100) : undefined
+              };
+            }
+
             document.addEventListener('click', function(event) {
               var target = event.target;
               var link = target && target.closest ? target.closest('a[data-analytics-download]') : null;
@@ -54,20 +58,15 @@ export function GoogleAnalytics() {
                 return;
               }
 
-              event.preventDefault();
               gtag('event', 'download_click', {
                 ...go7WorkhorseClickParams(link),
                 platform: platform,
                 transport_type: 'beacon'
               });
-              window.setTimeout(function() {
-                window.location.assign(link.href);
-              }, 700);
+              // transport_type:'beacon' survives the navigation; no setTimeout delay.
+              window.location.assign(link.href);
             }, true);
-          }
 
-          if (!window.__go7WorkhorseOutboundTracking) {
-            window.__go7WorkhorseOutboundTracking = true;
             document.addEventListener('click', function(event) {
               var target = event.target;
               var link = target && target.closest ? target.closest('a[data-analytics-outbound]') : null;

@@ -96,7 +96,7 @@ describe("page wires the shipped helpers", () => {
     assert.match(latestRelease, /data-analytics-download=\{card\.platform\}/);
     assert.match(analytics, /a\[data-analytics-download\]/);
     assert.match(analytics, /transport_type: 'beacon'/);
-    assert.match(analytics, /window\.setTimeout/);
+    assert.match(analytics, /window\.location\.assign\(link\.href\)/);
   });
 });
 

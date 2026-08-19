@@ -97,6 +97,42 @@ describe("monitor — SoftwareApplication JSON-LD", () => {
     const drifted = liveLikeHtml().replace(PRODUCT_NAME, "Someone Else");
     assert.equal(checkSoftwareApplication(drifted).ok, false);
   });
+
+  it("fails when applicationCategory drifts from the source of truth", () => {
+    const drifted = liveLikeHtml().replace(
+      `"applicationCategory":"DeveloperApplication"`,
+      `"applicationCategory":"UtilitiesApplication"`,
+    );
+    const result = checkSoftwareApplication(drifted);
+    assert.equal(result.ok, false);
+    assert.match(result.detail, /applicationCategory/);
+  });
+
+  it("fails when operatingSystem drops macOS", () => {
+    const drifted = liveLikeHtml().replace(
+      `"operatingSystem":["Windows","macOS"]`,
+      `"operatingSystem":["Windows"]`,
+    );
+    const result = checkSoftwareApplication(drifted);
+    assert.equal(result.ok, false);
+    assert.match(result.detail, /operatingSystem/);
+  });
+
+  it("fails when operatingSystem is not an array", () => {
+    const drifted = liveLikeHtml().replace(
+      `"operatingSystem":["Windows","macOS"]`,
+      `"operatingSystem":"Windows, macOS"`,
+    );
+    const result = checkSoftwareApplication(drifted);
+    assert.equal(result.ok, false);
+    assert.match(result.detail, /operatingSystem/);
+  });
+
+  it("reports the canonical operating systems in the pass detail", () => {
+    const result = checkSoftwareApplication(liveLikeHtml());
+    assert.equal(result.ok, true);
+    assert.match(result.detail, /operatingSystem=Windows\|macOS/);
+  });
 });
 
 describe("monitor — download_click event", () => {

@@ -107,6 +107,20 @@ export function checkSoftwareApplication(html: string): CheckResult {
   if (app.downloadUrl !== expected.downloadUrl) {
     mismatches.push(`downloadUrl=${JSON.stringify(app.downloadUrl)}`);
   }
+  if (app.applicationCategory !== expected.applicationCategory) {
+    mismatches.push(`applicationCategory=${JSON.stringify(app.applicationCategory)}`);
+  }
+  const expectedOS = expected.operatingSystem as readonly string[];
+  const actualOS = Array.isArray(app.operatingSystem)
+    ? (app.operatingSystem as unknown[]).map((os) => String(os))
+    : null;
+  if (
+    !actualOS ||
+    actualOS.length !== expectedOS.length ||
+    expectedOS.some((os, i) => os !== actualOS[i])
+  ) {
+    mismatches.push(`operatingSystem=${JSON.stringify(app.operatingSystem)}`);
+  }
 
   if (mismatches.length > 0) {
     return {
@@ -121,7 +135,10 @@ export function checkSoftwareApplication(html: string): CheckResult {
     id: "json_ld",
     label: "SoftwareApplication JSON-LD",
     ok: true,
-    detail: `name=${expected.name}, downloadUrl=${expected.downloadUrl}`,
+    detail:
+      `name=${expected.name}, downloadUrl=${expected.downloadUrl}, ` +
+      `applicationCategory=${expected.applicationCategory}, ` +
+      `operatingSystem=${expectedOS.join("|")}`,
   };
 }
 
