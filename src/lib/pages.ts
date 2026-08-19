@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DESK_LINE, PRODUCT_NAME, RELEASES_URL, REPO_URL, SITE_ORIGIN } from "./site.ts";
+import { DESK_LINE, DISCORD_URL, PRODUCT_NAME, RELEASES_URL, REPO_URL, SITE_ORIGIN } from "./site.ts";
 import { LLMS_TXT_CLICK_EVENT, REPO_CLICK_EVENT } from "./analytics.ts";
 
 /** Every human page on the site. Add here, and the nav, footer, sitemap and llms.txt follow. */
@@ -67,6 +67,7 @@ export const FOOTER_LINKS: readonly SiteLink[] = [
   { href: RELEASES_INDEX_URL, label: "Releases", analyticsEvent: REPO_CLICK_EVENT },
   { href: REPO_URL, label: "Public repo", analyticsEvent: REPO_CLICK_EVENT },
   { href: GO7STUDIO_URL, label: "go7studio.com" },
+  { href: DISCORD_URL, label: "Discord" },
   { href: "/llms.txt", label: "llms.txt", analyticsEvent: LLMS_TXT_CLICK_EVENT },
 ];
 
