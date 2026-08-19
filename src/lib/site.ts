@@ -8,6 +8,7 @@ export const SUBSCRIPTION_CLAIM = "Every subscription stays its own.";
 export const NO_HOST_CLAIM =
   "There is no account with us and no server of ours.";
 export const REPO_URL = "https://github.com/go7studio/Go7-Workhorse";
+export const DISCORD_URL = "https://discord.gg/QwVJJmFBMQ";
 export const RELEASES_URL =
   "https://github.com/go7studio/Go7-Workhorse/releases/latest";
 export const SITE_ORIGIN = "https://go7workhorse.com";

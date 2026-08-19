@@ -13,7 +13,7 @@ import { FOOTER_LINKS, NAV_LINKS, PAGES, metadataFor, pageMetadata } from "./pag
 import { formatDate, formatSize, parseLatestRelease } from "./release.ts";
 import { FEATURE_LIST } from "./feature-list.ts";
 import { breadcrumbLd, docsIndexLd, faqLd, organizationLd, techArticleLd, webSiteLd } from "./schema.ts";
-import { PRODUCT_NAME, RELEASES_URL, REPO_URL, softwareApplicationJsonLd } from "./site.ts";
+import { DISCORD_URL, PRODUCT_NAME, RELEASES_URL, REPO_URL, softwareApplicationJsonLd } from "./site.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const appDir = join(here, "../app");
@@ -238,6 +238,12 @@ describe("routes, nav and footer", () => {
     assert.ok(FOOTER_LINKS.some((link) => link.href === "/llms.txt"));
     assert.ok(FOOTER_LINKS.some((link) => link.href === REPO_URL));
     assert.ok(NAV_LINKS.some((link) => link.href === REPO_URL));
+  });
+
+  it("puts Discord in the footer, not the top bar", () => {
+    assert.ok(FOOTER_LINKS.some((link) => link.label === "Discord" && link.href === DISCORD_URL));
+    assert.equal(DISCORD_URL, "https://discord.gg/QwVJJmFBMQ");
+    assert.equal(NAV_LINKS.some((link) => /discord/i.test(link.label) || /discord/i.test(link.href)), false);
   });
 
   it("subpage metadata keeps the canonical and the llms alternates", () => {
