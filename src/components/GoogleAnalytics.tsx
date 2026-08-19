@@ -46,21 +46,14 @@ export function GoogleAnalytics() {
               }
 
               event.preventDefault();
-              var navigated = false;
-              function finish() {
-                if (navigated) return;
-                navigated = true;
-                window.location.assign(link.href);
-              }
-
-              window.setTimeout(finish, 1200);
               gtag('event', 'download_click', {
                 platform: platform,
                 destination_href: link.href,
-                event_callback: finish,
-                event_timeout: 1000,
                 transport_type: 'beacon'
               });
+              window.setTimeout(function() {
+                window.location.assign(link.href);
+              }, 700);
             }, true);
           }
         `,

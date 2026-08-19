@@ -71,10 +71,10 @@ describe("download click analytics", () => {
     ]);
   });
 
-  it("waits for the GA callback before normal outbound navigation", () => {
+  it("briefly delays normal outbound navigation after sending the event", () => {
     let prevented = false;
     let assigned = "";
-    let callback: (() => void) | undefined;
+    let timeout: (() => void) | undefined;
     const calls: Array<[string, string, Record<string, unknown>]> = [];
 
     globalThis.window = {
@@ -84,14 +84,16 @@ describe("download click analytics", () => {
         params: Record<string, unknown>,
       ) => {
         calls.push([command, eventName, params]);
-        callback = params.event_callback as () => void;
       },
       location: {
         assign: (href: string) => {
           assigned = href;
         },
       },
-      setTimeout: () => 1,
+      setTimeout: (fn: () => void) => {
+        timeout = fn;
+        return 1;
+      },
     } as unknown as Window & typeof globalThis;
 
     trackDownloadNavigation(
@@ -116,9 +118,8 @@ describe("download click analytics", () => {
     assert.equal(calls[0][0], "event");
     assert.equal(calls[0][1], DOWNLOAD_CLICK_EVENT);
     assert.equal(calls[0][2].transport_type, "beacon");
-    assert.equal(calls[0][2].event_timeout, 1000);
 
-    callback?.();
+    timeout?.();
 
     assert.equal(
       assigned,

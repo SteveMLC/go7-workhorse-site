@@ -5,8 +5,6 @@ export const DOWNLOAD_CLICK_EVENT = "download_click";
 export type DownloadClickEventParams = {
   platform: DownloadAction["platform"];
   destination_href: DownloadAction["href"];
-  event_callback?: () => void;
-  event_timeout?: number;
   transport_type?: "beacon";
 };
 
@@ -26,7 +24,7 @@ export function downloadClickEventParams(
   download: Pick<DownloadAction, "platform" | "href">,
   options: Pick<
     DownloadClickEventParams,
-    "event_callback" | "event_timeout" | "transport_type"
+    "transport_type"
   > = {},
 ): DownloadClickEventParams {
   return {
@@ -40,7 +38,7 @@ export function trackDownloadClick(
   download: Pick<DownloadAction, "platform" | "href">,
   options: Pick<
     DownloadClickEventParams,
-    "event_callback" | "event_timeout" | "transport_type"
+    "transport_type"
   > = {},
 ): boolean {
   if (typeof window === "undefined" || typeof window.gtag !== "function") {
@@ -90,17 +88,8 @@ export function trackDownloadNavigation(
 
   event.preventDefault();
 
-  let navigated = false;
-  const finish = () => {
-    if (navigated) return;
-    navigated = true;
-    navigate();
-  };
-
-  window.setTimeout(finish, 1200);
   trackDownloadClick(download, {
-    event_callback: finish,
-    event_timeout: 1000,
     transport_type: "beacon",
   });
+  window.setTimeout(navigate, 700);
 }
