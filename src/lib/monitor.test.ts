@@ -9,6 +9,7 @@ import {
 } from "./site.ts";
 import {
   GA_MEASUREMENT_ID,
+  checkAnalyticsPayload,
   checkDownloadEvent,
   checkGa4,
   checkHttp,
@@ -35,7 +36,9 @@ function liveLikeHtml(): string {
   ].join("");
 }
 
-const DEPLOYED_SCRIPTS = `function h(a){window.gtag("event","${DOWNLOAD_CLICK_EVENT}",a)}`;
+const DEPLOYED_SCRIPTS =
+  `function h(a){window.gtag("event","${DOWNLOAD_CLICK_EVENT}",` +
+  `{destination_href:a.href,page_location:location.href,link_text:a.text,platform:a.platform})}`;
 
 function goodSnapshot(): SiteSnapshot {
   return {
@@ -129,10 +132,17 @@ describe("monitor — full snapshot", () => {
   it("passes when every signal is live", () => {
     const report = evaluateSnapshot(goodSnapshot());
     assert.equal(report.ok, true);
-    assert.equal(report.checks.length, 5);
+    assert.equal(report.checks.length, 6);
     assert.deepEqual(
       report.checks.map((check) => check.id),
-      ["http", "ga4", "json_ld", "download_event", "outbound_events"],
+      [
+        "http",
+        "ga4",
+        "json_ld",
+        "download_event",
+        "outbound_events",
+        "analytics_payload",
+      ],
     );
   });
 
@@ -158,6 +168,24 @@ describe("monitor — full snapshot", () => {
     assert.match(text, /^Go7 Workhorse live monitor — https:\/\/go7workhorse\.com/);
     assert.match(text, /Result: PASS/);
     assert.match(text, /\[PASS\] GA4 measurement id/);
+  });
+});
+
+describe("monitor — analytics payload shape", () => {
+  it("passes when all custom params are in the deployed output", () => {
+    const result = checkAnalyticsPayload(DEPLOYED_SCRIPTS);
+    assert.equal(result.ok, true);
+    assert.match(result.detail, /page_location/);
+    assert.match(result.detail, /link_text/);
+  });
+
+  it("fails when the page or link text params are absent", () => {
+    const result = checkAnalyticsPayload(
+      `gtag('event','${DOWNLOAD_CLICK_EVENT}',{destination_href:href,platform:'mac'})`,
+    );
+    assert.equal(result.ok, false);
+    assert.match(result.detail, /page_location/);
+    assert.match(result.detail, /link_text/);
   });
 });
 

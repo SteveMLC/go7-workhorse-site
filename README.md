@@ -30,9 +30,9 @@ used, so events are captured before and after hydration completes.
 
 | Event | Data attribute trigger | Key params |
 |---|---|---|
-| `download_click` | `<a data-analytics-download="mac\|windows">` | `platform`, `destination_href`, `transport_type` |
-| `repo_click` | `<a data-analytics-outbound="repo_click">` | `destination_href` |
-| `llms_txt_click` | `<a data-analytics-outbound="llms_txt_click">` | `destination_href` |
+| `download_click` | `<a data-analytics-download="mac\|windows">` | `platform`, `destination_href`, `page_location`, `link_text`, `transport_type` |
+| `repo_click` | `<a data-analytics-outbound="repo_click">` | `destination_href`, `page_location`, `link_text` |
+| `llms_txt_click` | `<a data-analytics-outbound="llms_txt_click">` | `destination_href`, `page_location`, `link_text` |
 
 Links that carry these attributes:
 
@@ -44,17 +44,20 @@ Links that carry these attributes:
 
 Open GA4 → Reports → Realtime, then on the live site:
 
-- Click a download button → `download_click` appears with `platform` set.
+- Click a download button → `download_click` appears with `platform` and `page_location` set.
 - Click "Public repo" in the nav → `repo_click` appears.
 - Click "llms.txt" in the footer → `llms_txt_click` appears.
 
 Use GA4 Admin → DebugView with `?debug=1` appended to the URL for event-by-event inspection.
+Register `platform`, `destination_href`, `page_location`, and `link_text` as
+event-scoped custom dimensions before building reports from those params.
 
 ## Live-site monitor
 
-`npm run monitor` fetches the live site and asserts five facts: HTTP success,
+`npm run monitor` fetches the live site and asserts six facts: HTTP success,
 the GA4 measurement id, the SoftwareApplication JSON-LD, the `download_click`
-event, and both outbound event names (`repo_click`, `llms_txt_click`).
+event, both outbound event names (`repo_click`, `llms_txt_click`), and the
+custom payload params GA4 reporting depends on.
 It reads the page and its first-party scripts only — it changes nothing.
 Point it elsewhere with `MONITOR_URL=https://preview... npm run monitor`.
 

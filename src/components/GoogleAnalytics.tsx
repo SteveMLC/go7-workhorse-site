@@ -21,6 +21,15 @@ export function GoogleAnalytics() {
           gtag('js', new Date());
           gtag('config', '${MEASUREMENT_ID}');
 
+          function go7WorkhorseClickParams(link) {
+            var linkText = link.textContent ? link.textContent.replace(/\\s+/g, ' ').trim() : '';
+            return {
+              destination_href: link.href,
+              page_location: window.location.href,
+              link_text: linkText ? linkText.slice(0, 100) : undefined
+            };
+          }
+
           if (!window.__go7WorkhorseDownloadTracking) {
             window.__go7WorkhorseDownloadTracking = true;
             document.addEventListener('click', function(event) {
@@ -38,8 +47,8 @@ export function GoogleAnalytics() {
 
               if (!plainPrimaryClick) {
                 gtag('event', 'download_click', {
+                  ...go7WorkhorseClickParams(link),
                   platform: platform,
-                  destination_href: link.href,
                   transport_type: 'beacon'
                 });
                 return;
@@ -47,8 +56,8 @@ export function GoogleAnalytics() {
 
               event.preventDefault();
               gtag('event', 'download_click', {
+                ...go7WorkhorseClickParams(link),
                 platform: platform,
-                destination_href: link.href,
                 transport_type: 'beacon'
               });
               window.setTimeout(function() {
@@ -65,7 +74,7 @@ export function GoogleAnalytics() {
               if (!link || !link.href) return;
               var eventName = link.getAttribute('data-analytics-outbound');
               if (!eventName) return;
-              gtag('event', eventName, { destination_href: link.href });
+              gtag('event', eventName, go7WorkhorseClickParams(link));
             }, true);
           }
         `,

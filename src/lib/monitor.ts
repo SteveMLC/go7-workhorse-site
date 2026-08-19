@@ -5,7 +5,13 @@ import { softwareApplicationJsonLd } from "./site";
 // the deployed site ever stops loading this exact stream.
 export const GA_MEASUREMENT_ID = "G-VCG5F1M7MB";
 
-export type CheckId = "http" | "ga4" | "json_ld" | "download_event" | "outbound_events";
+export type CheckId =
+  | "http"
+  | "ga4"
+  | "json_ld"
+  | "download_event"
+  | "outbound_events"
+  | "analytics_payload";
 
 export type CheckResult = {
   id: CheckId;
@@ -152,6 +158,27 @@ export function checkOutboundEvents(html: string, scripts: string = ""): CheckRe
   };
 }
 
+const ANALYTICS_PAYLOAD_PARAMS = [
+  "destination_href",
+  "page_location",
+  "link_text",
+  "platform",
+] as const;
+
+export function checkAnalyticsPayload(scripts: string, html: string = ""): CheckResult {
+  const output = `${html}\n${scripts}`;
+  const missing = ANALYTICS_PAYLOAD_PARAMS.filter((param) => !output.includes(param));
+  const ok = missing.length === 0;
+  return {
+    id: "analytics_payload",
+    label: "analytics event payload",
+    ok,
+    detail: ok
+      ? `${ANALYTICS_PAYLOAD_PARAMS.join(", ")} found in deployed output`
+      : `missing payload params in deployed output: ${missing.join(", ")}`,
+  };
+}
+
 export function evaluateSnapshot(snapshot: SiteSnapshot): MonitorReport {
   const checks = [
     checkHttp(snapshot.status),
@@ -159,6 +186,7 @@ export function evaluateSnapshot(snapshot: SiteSnapshot): MonitorReport {
     checkSoftwareApplication(snapshot.html),
     checkDownloadEvent(snapshot.scripts, snapshot.html),
     checkOutboundEvents(snapshot.html, snapshot.scripts),
+    checkAnalyticsPayload(snapshot.scripts, snapshot.html),
   ];
   return {
     url: snapshot.url,

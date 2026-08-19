@@ -22,11 +22,16 @@ describe("download click analytics", () => {
       downloadClickEventParams({
         platform: "mac",
         href: "https://github.com/go7studio/Go7-Workhorse/releases/latest",
+      }, {
+        page_location: "https://go7workhorse.com/",
+        link_text: "Download for Mac",
       }),
       {
         platform: "mac",
         destination_href:
           "https://github.com/go7studio/Go7-Workhorse/releases/latest",
+        page_location: "https://go7workhorse.com/",
+        link_text: "Download for Mac",
       },
     );
   });
@@ -45,6 +50,9 @@ describe("download click analytics", () => {
   it("fires the download event with platform and href when gtag exists", () => {
     const calls: Array<[string, string, Record<string, unknown>]> = [];
     globalThis.window = {
+      location: {
+        href: "https://go7workhorse.com/",
+      },
       gtag: (
         command: string,
         eventName: string,
@@ -69,6 +77,7 @@ describe("download click analytics", () => {
           platform: "windows",
           destination_href:
             "https://github.com/go7studio/Go7-Workhorse/releases/latest",
+          page_location: "https://go7workhorse.com/",
         },
       ],
     ]);
@@ -92,6 +101,7 @@ describe("download click analytics", () => {
         assign: (href: string) => {
           assigned = href;
         },
+        href: "https://go7workhorse.com/download",
       },
       setTimeout: (fn: () => void) => {
         timeout = fn;
@@ -121,6 +131,7 @@ describe("download click analytics", () => {
     assert.equal(calls[0][0], "event");
     assert.equal(calls[0][1], DOWNLOAD_CLICK_EVENT);
     assert.equal(calls[0][2].transport_type, "beacon");
+    assert.equal(calls[0][2].page_location, "https://go7workhorse.com/download");
 
     timeout?.();
 
@@ -148,6 +159,9 @@ describe("outbound click analytics", () => {
   it("fires repo_click with destination_href when gtag exists", () => {
     const calls: Array<[string, string, Record<string, unknown>]> = [];
     globalThis.window = {
+      location: {
+        href: "https://go7workhorse.com/",
+      },
       gtag: (command: string, eventName: string, params: Record<string, unknown>) => {
         calls.push([command, eventName, params]);
       },
@@ -155,7 +169,16 @@ describe("outbound click analytics", () => {
 
     const href = "https://github.com/go7studio/Go7-Workhorse";
     assert.equal(trackOutboundClick(REPO_CLICK_EVENT, href), true);
-    assert.deepEqual(calls, [["event", REPO_CLICK_EVENT, { destination_href: href }]]);
+    assert.deepEqual(calls, [
+      [
+        "event",
+        REPO_CLICK_EVENT,
+        {
+          destination_href: href,
+          page_location: "https://go7workhorse.com/",
+        },
+      ],
+    ]);
   });
 
   it("fires llms_txt_click for the llms.txt link", () => {
@@ -167,8 +190,19 @@ describe("outbound click analytics", () => {
     } as Window & typeof globalThis;
 
     const href = "https://go7workhorse.com/llms.txt";
-    assert.equal(trackOutboundClick(LLMS_TXT_CLICK_EVENT, href), true);
+    assert.equal(
+      trackOutboundClick(LLMS_TXT_CLICK_EVENT, href, {
+        page_location: "https://go7workhorse.com/docs",
+        link_text: "llms.txt",
+      }),
+      true,
+    );
     assert.equal(calls[0][1], LLMS_TXT_CLICK_EVENT);
     assert.equal((calls[0][2] as Record<string, string>).destination_href, href);
+    assert.equal(
+      (calls[0][2] as Record<string, string>).page_location,
+      "https://go7workhorse.com/docs",
+    );
+    assert.equal((calls[0][2] as Record<string, string>).link_text, "llms.txt");
   });
 });
