@@ -181,7 +181,7 @@ export const DOCS: Doc[] = [
 {
     slug: "grok-bot",
     title: "Connect Grok Bot",
-    lead: "Two connections, one optional. Grok Bot calls the desk over Workhorse Link; instant replies let the desk wake Grok Bot.",
+    lead: "A cloud computer harness: its own agents, on its own remote computer, with its own usage. It calls the desk over Workhorse Link; instant replies let the desk wake it.",
     sections: [
       {
         id: "two-connections",
@@ -250,7 +250,7 @@ export const DOCS: Doc[] = [
           {
             kind: "ul",
             items: [
-              "**Add a bot** ships a Grok Bot preset: a local OpenAI-compatible shim on `127.0.0.1`, model `grok-bot`. It is not Grok 4.6 — Grok over ACP stays a separate vendor with its own login, and Grok Bot is not a fifth stock vendor.",
+              "**Add a bot** ships a Grok Bot preset: a local OpenAI-compatible shim on `127.0.0.1`, model `grok-bot`. It is not Grok 4.6 — Grok over ACP stays a separate vendor with its own login. Grok Bot is a harness that happens to carry usage: its work runs on its own remote computer, and its ring is its own.",
               "Each install mints its own loopback token; completions refuse any other caller, and the port binds loopback only. The connection fails closed when the shim is down.",
               "Auto routing may call it to analyze and dispatch, but does not allocate it as an orchestration or builder worker.",
               "Its weekly ring reads a leftover file Grok Bot itself keeps current; a missing, invalid, or older-than-30-minute reading stays unknown. The desk never writes that file.",

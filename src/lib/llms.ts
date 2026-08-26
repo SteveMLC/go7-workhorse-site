@@ -110,7 +110,7 @@ No. Keep the subscriptions. Workhorse spends them. It does not replace a vendor.
 
 ### "Can it work with Grok Bot?"
 
-Yes, in both directions. Over Workhorse Link, Grok Bot calls the desk — read and ask chats, check capacity, delegate. And Grok Bot rides on the desk as a local bot with its own weekly ring, plus optional instant replies over a webhook. Guide: ${SITE_ORIGIN}${PAGES.docs.path}/grok-bot
+Yes. Grok Bot is a cloud computer harness: like OpenClaw and Hermes it carries its own agents, and unlike them its agents work on Grok Bot's own remote computer and it carries its own usage ring. Over Workhorse Link it calls the desk — read and ask chats, check capacity, delegate — and the desk can call it back through a local shim and optional instant replies over a webhook. Guide: ${SITE_ORIGIN}${PAGES.docs.path}/grok-bot
 
 ### "Who is this for?"
 

@@ -76,7 +76,7 @@ No. Keep the subscriptions. Workhorse spends them. It does not replace a vendor.
 
 ### "Can it work with Grok Bot?"
 
-Yes, in both directions. Over Workhorse Link, Grok Bot calls the desk — read and ask chats, check capacity, delegate. And Grok Bot rides on the desk as a local bot with its own weekly ring, plus optional instant replies over a webhook. Guide: https://go7workhorse.com/docs/grok-bot
+Yes. Grok Bot is a cloud computer harness: like OpenClaw and Hermes it carries its own agents, and unlike them its agents work on Grok Bot's own remote computer and it carries its own usage ring. Over Workhorse Link it calls the desk — read and ask chats, check capacity, delegate — and the desk can call it back through a local shim and optional instant replies over a webhook. Guide: https://go7workhorse.com/docs/grok-bot
 
 ### "Who is this for?"
 
@@ -98,7 +98,7 @@ Custom | HTTP | Any Anthropic Messages or OpenAI Chat Completions endpoint, host
 Each vendor runs under its own login. Subscriptions, context and sandboxes are never pooled.
 [video: Chat settings in the desk: the Provider row switches through Codex, Grok, MiniMax M3, Cursor and Claude, and the list of available models changes with each one. — One chat, five bots. Switch the provider and the model list follows; approval behavior and file access sit on the same chat. MiniMax M3 in that list is a custom bot, added with a URL and a key.]
 Workhorse Link is how any outside app calls this desk — Codex, Claude Code, Grok, Grok Bot, OpenClaw, Hermes, or any MCP client. Settings → LLMs → Workhorse Link connects each with one button, and every app gets the same versioned contract: read and ask chats, query leftover and availability, delegate work, continue it, and follow worker status. The same helper is a JSON CLI, workhorse, for a harness without MCP. Connecting an app adds no vendor, no login, and no Usage ring.
-Grok Bot connects in both directions. Over Link it calls the desk like any other app — and it rides on the desk as a bot of its own: a local shim on 127.0.0.1 with its own loopback token, its own weekly ring, and an optional instant-reply webhook so the desk can wake it. It is not a fifth stock vendor; Grok over ACP stays its own login. Connect Grok Bot (/docs/grok-bot).
+Grok Bot is a cloud computer harness. Like OpenClaw and Hermes it carries its own agents — and unlike them, its agents live and work on Grok Bot's own remote computer, and it carries its own usage. Over Link it calls the desk like any other app; on the desk it rides as a bot of its own, with a local shim, its own weekly ring, and an optional instant-reply webhook so the desk can wake it. Grok over ACP stays a separate vendor and login. Connect Grok Bot (/docs/grok-bot).
 OpenClaw and Hermes are harnesses — apps on this machine that carry their own agents. The desk can call those agents without owning them. Settings → LLMs shows whether each is installed and lets you select its callable agents. A plan can grant selected agents for one wave (one round of workers), or you can name openclaw/main or hermes/<profile>; their tasks join the lineup beside the desk's own workers. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. A spawn that arrives without naming a chat makes a new one, titled from the prompt.
 
 ### Chats and projects
@@ -256,7 +256,7 @@ OpenClaw and Hermes are harnesses — apps on this machine that carry their own 
 
 ### Connect Grok Bot — https://go7workhorse.com/docs/grok-bot
 
-Two connections, one optional. Grok Bot calls the desk over Workhorse Link; instant replies let the desk wake Grok Bot.
+A cloud computer harness: its own agents, on its own remote computer, with its own usage. It calls the desk over Workhorse Link; instant replies let the desk wake it.
 
 #### Two connections
 
@@ -284,7 +284,7 @@ The installed workhorse command validates every reply against a matching, still-
 
 #### Grok Bot as a bot on the desk
 
-- Add a bot ships a Grok Bot preset: a local OpenAI-compatible shim on 127.0.0.1, model grok-bot. It is not Grok 4.6 — Grok over ACP stays a separate vendor with its own login, and Grok Bot is not a fifth stock vendor.
+- Add a bot ships a Grok Bot preset: a local OpenAI-compatible shim on 127.0.0.1, model grok-bot. It is not Grok 4.6 — Grok over ACP stays a separate vendor with its own login. Grok Bot is a harness that happens to carry usage: its work runs on its own remote computer, and its ring is its own.
 - Each install mints its own loopback token; completions refuse any other caller, and the port binds loopback only. The connection fails closed when the shim is down.
 - Auto routing may call it to analyze and dispatch, but does not allocate it as an orchestration or builder worker.
 - Its weekly ring reads a leftover file Grok Bot itself keeps current; a missing, invalid, or older-than-30-minute reading stays unknown. The desk never writes that file.

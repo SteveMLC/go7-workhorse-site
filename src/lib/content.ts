@@ -94,7 +94,7 @@ export const FEATURE_SECTIONS: Section[] = [
       },
       {
         kind: "p",
-        text: "**Grok Bot** connects in both directions. Over Link it calls the desk like any other app — and it rides on the desk as a bot of its own: a local shim on 127.0.0.1 with its own loopback token, its own weekly ring, and an optional instant-reply webhook so the desk can wake it. It is not a fifth stock vendor; Grok over ACP stays its own login. [Connect Grok Bot](/docs/grok-bot).",
+        text: "**Grok Bot** is a cloud computer harness. Like OpenClaw and Hermes it carries its own agents — and unlike them, its agents live and work on Grok Bot's own remote computer, and it carries its own usage. Over Link it calls the desk like any other app; on the desk it rides as a bot of its own, with a local shim, its own weekly ring, and an optional instant-reply webhook so the desk can wake it. Grok over ACP stays a separate vendor and login. [Connect Grok Bot](/docs/grok-bot).",
       },
       {
         kind: "p",
