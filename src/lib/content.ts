@@ -28,7 +28,7 @@ export type Faq = { q: string; a: string };
 export const HOME_FACTS: Fact[] = [
   {
     title: "Nothing pools.",
-    body: "Grok, Claude, Codex, Cursor and your custom bots each run under their own login. Not subscriptions, not context, not sandboxes.",
+    body: "Grok, Claude, Codex, Cursor and your custom bots each run under their own login. The desk never pools them — not subscriptions, not context, not sandboxes.",
   },
   {
     title: "A model per chat.",
@@ -36,7 +36,7 @@ export const HOME_FACTS: Fact[] = [
   },
   {
     title: "Leftover, from official meters.",
-    body: "Usage per vendor and per chat, from each vendor's own count. Budgets, a weekly pace, a daily bank. A missing meter stays unknown, not zero.",
+    body: "Leftover is what is still unspent on each plan, read from each vendor's own meter — per bot and per chat. Budgets, a weekly pace, a daily bank that carries forward what a day did not spend. A missing meter stays unknown, not zero.",
   },
   {
     title: "Bring your own.",
@@ -70,6 +70,10 @@ export const FEATURE_SECTIONS: Section[] = [
     id: "agents",
     title: "Agents",
     blocks: [
+      {
+        kind: "p",
+        text: "Five kinds of bot sit on the desk — four vendors and your own endpoints. Each vendor connects over ACP (the Agent Client Protocol, the pipe its own CLI already speaks) and runs as its own process; custom bots are plain HTTP.",
+      },
       { kind: "table", head: VENDOR_TABLE.head, rows: VENDOR_TABLE.rows },
       {
         kind: "p",
@@ -86,7 +90,7 @@ export const FEATURE_SECTIONS: Section[] = [
       },
       {
         kind: "p",
-        text: "OpenClaw and Hermes are harnesses, not vendors. Settings → LLMs shows whether each is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name `openclaw/main` or `hermes/<profile>`. Their tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. An unnamed inbound spawn makes a new chat in Chats, or in a project you pick, titled from the prompt.",
+        text: "OpenClaw and Hermes are harnesses — apps on this machine that carry their own agents. The desk can call those agents without owning them. Settings → LLMs shows whether each is installed and lets you select its callable agents. A plan can grant selected agents for one wave (one round of workers), or you can name `openclaw/main` or `hermes/<profile>`; their tasks join the lineup beside the desk's own workers. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. A spawn that arrives without naming a chat makes a new one, titled from the prompt.",
       },
     ],
   },
@@ -168,7 +172,7 @@ export const FEATURE_SECTIONS: Section[] = [
         items: [
           "Usage recorded per vendor and per chat, from each vendor's own count: the ACP turn total, or the HTTP response's usage block. A turn is estimated at four characters a token only when the vendor sent no count.",
           "**In** is fresh input — what the model read for the first time. **Cached** is context served back from cache, named apart so a long chat does not read as millions of new tokens. **Out** is what it wrote.",
-          "Compact shrinks the context meter. Leftover does not move unless that same bot ran a billed summary. A full window never holds a send the way a spent daily bank does.",
+          "Compact shrinks the context meter; leftover moves only if that bot ran a billed summary. A spent daily bank can hold your next send until tomorrow — a full context window never does. One is money, the other is context.",
           "Budgets per vendor.",
           "A weekly pace that tells you when you are ahead of it, before the bill does.",
           "A daily bank that hands every bot a slice of its plan per day and carries forward what it did not spend.",

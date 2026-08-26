@@ -127,6 +127,12 @@ main {
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav {
+    background: rgba(8, 8, 31, 0.97);
+  }
+}
+
 .nav-inner {
   max-width: 1120px;
   height: 100%;
@@ -170,7 +176,7 @@ main {
 }
 
 .nav-links a:hover,
-.nav-links a[aria-current="page"] {
+.nav-links a[aria-current] {
   color: var(--text);
 }
 
@@ -1511,6 +1517,17 @@ h1 {
   padding-top: clamp(28px, 5vh, 56px);
 }
 
+/* The rail follows the article in the DOM (keyboard order); the grid seats it left. */
+.docs-layout .rail {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.docs-layout .doc {
+  grid-column: 2;
+  grid-row: 1;
+}
+
 .rail {
   position: sticky;
   top: calc(var(--nav-h) + 24px);
@@ -1605,7 +1622,7 @@ h1 {
   padding-top: clamp(20px, 3vh, 32px);
 }
 
-.prose h4 {
+.prose h3 {
   margin: 18px 0 8px;
   font-family: var(--display);
   font-size: 15px;
@@ -1757,7 +1774,7 @@ h1 {
   color: var(--text-secondary);
 }
 
-.release-body h4 {
+.release-body h3 {
   margin: 14px 0 6px;
   font-family: var(--display);
   font-size: 14px;
@@ -1814,7 +1831,13 @@ h1 {
   color: var(--text-tertiary);
 }
 
-.log-empty a,
+.log-empty a {
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-decoration-color: rgba(155, 92, 255, 0.5);
+  text-underline-offset: 3px;
+}
+
 .log-more a {
   color: var(--text-secondary);
   text-decoration: none;
@@ -1840,7 +1863,7 @@ h1 {
 
 @keyframes rise {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: translateY(18px);
   }
   to {
@@ -1851,7 +1874,7 @@ h1 {
 
 @keyframes bloom {
   from {
-    opacity: 0;
+    opacity: 0.01;
     transform: scale(0.88) translateY(14px);
   }
   to {
@@ -1954,9 +1977,14 @@ h1 {
     gap: 28px;
   }
 
+  .docs-layout .rail,
+  .docs-layout .doc {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
   .rail {
     position: static;
-    order: 2;
     margin-top: 8px;
     padding-top: 22px;
     border-top: 1px solid var(--line);

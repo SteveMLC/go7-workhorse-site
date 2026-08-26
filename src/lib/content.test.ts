@@ -3,7 +3,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
-import { notesToBlocks, parseReleases } from "./changelog.ts";
+import { dedupeItems, notesToBlocks, parseReleases } from "./changelog.ts";
 import type { Block } from "./content.ts";
 import { DOWNLOAD_STEPS, FAQ, FEATURE_SECTIONS, HOME_FACTS } from "./content.ts";
 import { DESK_COMMANDS } from "./desk-commands.ts";
@@ -183,6 +183,19 @@ describe("changelog reader", () => {
     assert.ok(fixes.kind === "ul");
     assert.doesNotMatch(fixes.items[0], /<b>/);
     assert.equal(blocks[0].kind === "h" && blocks[0].text, "Features");
+  });
+
+  it("drops bullets that repeat an earlier one under a different commit hash", () => {
+    const twice = [
+      "one call shows the whole worker board ([97d0b6d](https://x/97d0b6d))",
+      "one call shows the whole worker board ([7fb49f6](https://x/7fb49f6))",
+      "a different change entirely ([1234abc](https://x/1234abc))",
+    ];
+    assert.deepEqual(dedupeItems(twice), [twice[0], twice[2]]);
+    const blocks = notesToBlocks("### Features\n\n* " + twice.join("\n* "));
+    const list = blocks.find((b) => b.kind === "ul");
+    assert.ok(list && list.kind === "ul");
+    assert.equal(list.items.length, 2);
   });
 
   it("parses the releases list, skips drafts, and strips the v", () => {

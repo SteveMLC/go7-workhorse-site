@@ -101,7 +101,7 @@ export function metadataFor(page: { path: string; title: string; description: st
       description: page.description,
       url: page.path,
       siteName: PRODUCT_NAME,
-      images: [{ url: "/og.png", width: 1280, height: 640, alt: PRODUCT_NAME }],
+      images: [{ url: "/og.png", width: 1200, height: 630, alt: PRODUCT_NAME }],
       type: "website",
     },
     twitter: {

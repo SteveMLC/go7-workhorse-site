@@ -5,7 +5,7 @@ export function SiteFooter() {
   return (
     <footer className="foot">
       <span className="foot-brand">
-        <img src="/logo.png" alt="" width={18} height={18} />
+        <img src="/logo-64.webp" alt="" width={18} height={18} />
         {PRODUCT_NAME} · MIT · Go7 Studio
       </span>
       <nav className="foot-links" aria-label="Footer">

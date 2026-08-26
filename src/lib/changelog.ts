@@ -32,7 +32,7 @@ export function notesToBlocks(markdown: string | null | undefined): Block[] {
   const blocks: Block[] = [];
   let items: string[] = [];
   const flush = () => {
-    if (items.length) blocks.push({ kind: "ul", items });
+    if (items.length) blocks.push({ kind: "ul", items: dedupeItems(items) });
     items = [];
   };
   const lines = String(markdown ?? "")
@@ -74,6 +74,30 @@ export function notesToBlocks(markdown: string | null | undefined): Block[] {
 /** Keep the three inline marks the site renders; drop anything that could read as HTML. */
 export function cleanInline(text: string): string {
   return text.replace(/<[^>]*>/g, "").trim();
+}
+
+/** A bullet's identity, ignoring commit-hash links: release notes sometimes
+ *  carry the same change twice under two hashes (a commit and its merge). */
+function bulletKey(text: string): string {
+  return text
+    .replace(/\(?\[[0-9a-f]{6,40}\]\([^)]*\)\)?/gi, "")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/[\s.,;]+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+/** Drop bullets that repeat an earlier bullet in the same list, hash aside. */
+export function dedupeItems(items: string[]): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const item of items) {
+    const key = bulletKey(item);
+    if (key && seen.has(key)) continue;
+    seen.add(key);
+    out.push(item);
+  }
+  return out;
 }
 
 export function parseReleases(json: unknown): Release[] {

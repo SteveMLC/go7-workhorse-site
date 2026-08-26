@@ -64,6 +64,7 @@ export const DOCS: Doc[] = [
               "**New project** — give it a name. No folder needed. Add **Source folders** now or later; several are allowed.",
               "**New chat** from that project, or from the welcome screen (that makes an Untitled project). A chat starts with the last model you used.",
               "Open **Chat settings** from the message box to set the **Provider**, pick from **Available models**, and set the **Reasoning level**. Those live on the chat, not the app.",
+              "**Connect a vendor.** The vendor CLIs are not bundled. Install the one you pay for — Grok, Claude Code, Codex or Cursor — and sign in as you normally do.",
               "**Talk.** Grok, Codex, Claude and Cursor run live through their own CLIs. A custom bot runs over HTTP.",
               "Type `/` for the palette. `/settings` opens Profile, LLMs, Skills, Routing, Learning, Usage and Watch.",
             ],
@@ -169,7 +170,7 @@ export const DOCS: Doc[] = [
         blocks: [
           {
             kind: "p",
-            text: "OpenClaw and Hermes are **harnesses**, not vendors. **Settings → LLMs** shows whether each runtime is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name `openclaw/main` or `hermes/<profile>`; those tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. **Settings → LLMs → Install MCP** writes a restricted Workhorse server into OpenClaw's `mcp.servers` (and Hermes's `mcp_servers` if Hermes is installed) so those apps can list, read and ask chats, and spawn a Workhorse worker on a chat you pick. No token is stored.",
+            text: "OpenClaw and Hermes are **harnesses** — apps on this machine that carry their own agents; the desk can call those agents without owning them. **Settings → LLMs** shows whether each runtime is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name `openclaw/main` or `hermes/<profile>`; those tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. **Settings → LLMs → Install MCP** writes a restricted Workhorse server into OpenClaw's `mcp.servers` (and Hermes's `mcp_servers` if Hermes is installed) so those apps can list, read and ask chats, and spawn a Workhorse worker on a chat you pick. No token is stored.",
           },
         ],
       },
@@ -334,7 +335,7 @@ export const DOCS: Doc[] = [
   {
     slug: "spend",
     title: "Meters, budgets and pace",
-    lead: "Spend is leftover, read from each vendor's own meter. A missing meter stays unknown.",
+    lead: "The desk counts what is left, not what you burned: leftover, read from each vendor's own meter. A missing meter stays unknown.",
     sections: [
       {
         id: "usage",

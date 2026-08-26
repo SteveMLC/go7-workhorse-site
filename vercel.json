@@ -3,21 +3,56 @@
   "redirects": [
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "go7desk.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "go7desk.com"
+        }
+      ],
       "destination": "https://go7workhorse.com/:path*",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.go7desk.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.go7desk.com"
+        }
+      ],
       "destination": "https://go7workhorse.com/:path*",
       "permanent": true
     },
     {
       "source": "/:path*",
-      "has": [{ "type": "host", "value": "www.go7workhorse.com" }],
+      "has": [
+        {
+          "type": "host",
+          "value": "www.go7workhorse.com"
+        }
+      ],
       "destination": "https://go7workhorse.com/:path*",
       "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/media/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=31536000, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/:file(favicon.ico|logo.png|logo-64.webp|horse.webp|horse.png|og.png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, s-maxage=31536000, stale-while-revalidate=604800"
+        }
+      ]
     }
   ]
 }

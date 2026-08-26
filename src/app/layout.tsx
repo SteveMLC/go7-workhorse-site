@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     description: DESK_LINE,
     url: SITE_ORIGIN,
     siteName: PRODUCT_NAME,
-    images: [{ url: "/og.png", width: 1280, height: 640, alt: PRODUCT_NAME }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: PRODUCT_NAME }],
     type: "website",
   },
   twitter: {

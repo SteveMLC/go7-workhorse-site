@@ -9,7 +9,7 @@ export function SiteNav({ current = "/" }: { current?: string }) {
       </a>
       <div className="nav-inner">
         <a className="brand" href="/">
-          <img src="/logo.png" alt="" width={26} height={26} />
+          <img src="/logo-64.webp" alt="" width={26} height={26} />
           <span>{PRODUCT_NAME}</span>
         </a>
         <nav className="nav-links" aria-label="Site">
@@ -17,7 +17,13 @@ export function SiteNav({ current = "/" }: { current?: string }) {
             <a
               key={link.href}
               href={link.href}
-              aria-current={link.href === current ? "page" : undefined}
+              aria-current={
+                link.href === current
+                  ? "page"
+                  : !link.href.startsWith("http") && current.startsWith(`${link.href}/`)
+                    ? "true"
+                    : undefined
+              }
               className={link.href.startsWith("http") ? "nav-ext" : undefined}
               data-analytics-outbound={link.analyticsEvent}
             >

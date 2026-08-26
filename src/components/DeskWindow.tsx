@@ -10,10 +10,10 @@ const RINGS: { vendor: Vendor; name: string; left: number }[] = [
 ];
 
 const CHATS: { vendor: Vendor; title: string }[] = [
-  { vendor: "grok", title: "Route the leftover" },
-  { vendor: "claude", title: "Review the join" },
-  { vendor: "codex", title: "Cut the slice" },
-  { vendor: "cursor", title: "Open the tree" },
+  { vendor: "grok", title: "Fix the flaky auth test" },
+  { vendor: "claude", title: "Write the release notes" },
+  { vendor: "codex", title: "Split the big PR" },
+  { vendor: "cursor", title: "Profile the slow query" },
 ];
 
 /** A still picture of the desk. Nothing here takes input. */
@@ -32,7 +32,7 @@ export function DeskWindow() {
       <div className="desk-body">
         <aside className="desk-side" aria-hidden="true">
           <div className="side-brand">
-            <img src="/logo.png" alt="" width={22} height={22} />
+            <img src="/logo-64.webp" alt="" width={22} height={22} />
             <span>{PRODUCT_NAME}</span>
           </div>
           <div className="side-search">Search all chats</div>

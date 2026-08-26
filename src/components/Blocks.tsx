@@ -1,5 +1,6 @@
 import type { Block, Section } from "@/lib/content";
 import { Inline } from "./Inline";
+import { LazyVideo } from "./LazyVideo";
 
 export function Blocks({ blocks }: { blocks: Block[] }) {
   return (
@@ -40,27 +41,20 @@ export function Blocks({ blocks }: { blocks: Block[] }) {
             );
           case "h":
             return (
-              <h4 key={index}>
+              <h3 key={index}>
                 <Inline text={block.text} />
-              </h4>
+              </h3>
             );
           case "video":
             return (
               <figure className="shotfig" key={index}>
-                <video
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
+                <LazyVideo
+                  src={block.src}
                   poster={block.poster}
                   width={block.width}
                   height={block.height}
-                  aria-label={block.alt}
-                >
-                  <source src={`${block.src}.webm`} type="video/webm" />
-                  <source src={`${block.src}.mp4`} type="video/mp4" />
-                </video>
+                  alt={block.alt}
+                />
                 {block.caption ? (
                   <figcaption>
                     <Inline text={block.caption} />

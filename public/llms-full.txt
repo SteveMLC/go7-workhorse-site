@@ -84,6 +84,7 @@ Every ability the desk ships, from the public docs/FEATURES.md. The site page is
 
 ### Agents
 
+Five kinds of bot sit on the desk — four vendors and your own endpoints. Each vendor connects over ACP (the Agent Client Protocol, the pipe its own CLI already speaks) and runs as its own process; custom bots are plain HTTP.
 Vendor | How it connects | Notes
 Grok | ACP over stdio | Runs the local Grok CLI
 Claude | ACP over stdio | Runs the local Claude Code CLI
@@ -92,7 +93,7 @@ Cursor | ACP over stdio | Runs cursor-agent
 Custom | HTTP | Any Anthropic Messages or OpenAI Chat Completions endpoint, hosted or local
 Each vendor runs under its own login. Subscriptions, context and sandboxes are never pooled.
 [video: Chat settings in the desk: the Provider row switches through Codex, Grok, MiniMax M3, Cursor and Claude, and the list of available models changes with each one. — One chat, five bots. Switch the provider and the model list follows; approval behavior and file access sit on the same chat. MiniMax M3 in that list is a custom bot, added with a URL and a key.]
-OpenClaw and Hermes are harnesses, not vendors. Settings → LLMs shows whether each is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name openclaw/main or hermes/<profile>. Their tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. An unnamed inbound spawn makes a new chat in Chats, or in a project you pick, titled from the prompt.
+OpenClaw and Hermes are harnesses — apps on this machine that carry their own agents. The desk can call those agents without owning them. Settings → LLMs shows whether each is installed and lets you select its callable agents. A plan can grant selected agents for one wave (one round of workers), or you can name openclaw/main or hermes/<profile>; their tasks join the lineup beside the desk's own workers. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. A spawn that arrives without naming a chat makes a new one, titled from the prompt.
 
 ### Chats and projects
 
@@ -132,7 +133,7 @@ A chat can also read media the agent wrote, so a generated image shows in the tr
 [video: Settings, Usage tab: a leftover ring for each bot — Grok, Codex, Claude, Cursor Composer, Cursor API, MiniMax M3 — above a chart of the current stretch. — Settings → Usage, read from each vendor's own meter: one ring per bot, Cursor as two pools, and the stretch below by day, week, month or all time.]
 - Usage recorded per vendor and per chat, from each vendor's own count: the ACP turn total, or the HTTP response's usage block. A turn is estimated at four characters a token only when the vendor sent no count.
 - In is fresh input — what the model read for the first time. Cached is context served back from cache, named apart so a long chat does not read as millions of new tokens. Out is what it wrote.
-- Compact shrinks the context meter. Leftover does not move unless that same bot ran a billed summary. A full window never holds a send the way a spent daily bank does.
+- Compact shrinks the context meter; leftover moves only if that bot ran a billed summary. A spent daily bank can hold your next send until tomorrow — a full context window never does. One is money, the other is context.
 - Budgets per vendor.
 - A weekly pace that tells you when you are ahead of it, before the bill does.
 - A daily bank that hands every bot a slice of its plan per day and carries forward what it did not spend.
@@ -196,8 +197,9 @@ Linux. No installer yet.
 1. New project — give it a name. No folder needed. Add Source folders now or later; several are allowed.
 2. New chat from that project, or from the welcome screen (that makes an Untitled project). A chat starts with the last model you used.
 3. Open Chat settings from the message box to set the Provider, pick from Available models, and set the Reasoning level. Those live on the chat, not the app.
-4. Talk. Grok, Codex, Claude and Cursor run live through their own CLIs. A custom bot runs over HTTP.
-5. Type / for the palette. /settings opens Profile, LLMs, Skills, Routing, Learning, Usage and Watch.
+4. Connect a vendor. The vendor CLIs are not bundled. Install the one you pay for — Grok, Claude Code, Codex or Cursor — and sign in as you normally do.
+5. Talk. Grok, Codex, Claude and Cursor run live through their own CLIs. A custom bot runs over HTTP.
+6. Type / for the palette. /settings opens Profile, LLMs, Skills, Routing, Learning, Usage and Watch.
 The welcome screen shows what it found on this machine: each vendor reads Recognized, Sign in needed, or Not found. If a vendor is missing, connect it (/docs/vendors).
 
 #### What you are looking at
@@ -243,7 +245,7 @@ Add a bot → Your own. Give it a Bot name, a Provider (Anthropic Messages or Op
 
 #### OpenClaw and Hermes
 
-OpenClaw and Hermes are harnesses, not vendors. Settings → LLMs shows whether each runtime is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name openclaw/main or hermes/<profile>; those tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. Settings → LLMs → Install MCP writes a restricted Workhorse server into OpenClaw's mcp.servers (and Hermes's mcp_servers if Hermes is installed) so those apps can list, read and ask chats, and spawn a Workhorse worker on a chat you pick. No token is stored.
+OpenClaw and Hermes are harnesses — apps on this machine that carry their own agents; the desk can call those agents without owning them. Settings → LLMs shows whether each runtime is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name openclaw/main or hermes/<profile>; those tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. Settings → LLMs → Install MCP writes a restricted Workhorse server into OpenClaw's mcp.servers (and Hermes's mcp_servers if Hermes is installed) so those apps can list, read and ask chats, and spawn a Workhorse worker on a chat you pick. No token is stored.
 
 ### Projects and chats — https://go7workhorse.com/docs/chats
 
@@ -319,7 +321,7 @@ The chat terminal is chat-scoped: it opens in that chat's folder or worktree, th
 
 ### Meters, budgets and pace — https://go7workhorse.com/docs/spend
 
-Spend is leftover, read from each vendor's own meter. A missing meter stays unknown.
+The desk counts what is left, not what you burned: leftover, read from each vendor's own meter. A missing meter stays unknown.
 
 #### Settings → Usage
 

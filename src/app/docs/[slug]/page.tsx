@@ -44,11 +44,9 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
           ]),
         ]}
       />
-      <SiteNav current={PAGES.docs.path} />
+      <SiteNav current={path} />
 
       <main className="sub docs-layout" id="main">
-        <DocsRail current={doc.slug} />
-
         <article className="doc">
           <header className="doc-head">
             <p className="doc-crumb">
@@ -110,6 +108,8 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
             )}
           </nav>
         </article>
+
+        <DocsRail current={doc.slug} />
       </main>
 
       <SiteFooter />

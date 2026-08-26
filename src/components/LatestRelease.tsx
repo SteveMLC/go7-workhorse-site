@@ -13,6 +13,7 @@ import { downloadAction, RELEASES_URL } from "@/lib/site";
 type Card = { key: string; os: string; title: string; sub: string; href: string; mine: boolean; platform: "mac" | "windows" };
 
 type Platform = "mac" | "windows" | "other";
+type MacArch = "arm" | "x64";
 
 function detectPlatform(): Platform {
   if (typeof navigator === "undefined") return "other";
@@ -20,6 +21,26 @@ function detectPlatform(): Platform {
   if (hint.includes("mac")) return "mac";
   if (hint.includes("win")) return "windows";
   return "other";
+}
+
+/** Which Mac is this? The GPU name tells: Apple silicon reports an Apple GPU
+ *  in every browser; Intel Macs report Intel/AMD/NVIDIA. Unknown defaults to
+ *  Apple silicon — what almost every Mac is by now. */
+function detectMacArch(): MacArch {
+  try {
+    const canvas = document.createElement("canvas");
+    const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    if (gl && "getExtension" in gl) {
+      const info = (gl as WebGLRenderingContext).getExtension("WEBGL_debug_renderer_info");
+      const renderer = info
+        ? String((gl as WebGLRenderingContext).getParameter(info.UNMASKED_RENDERER_WEBGL))
+        : "";
+      if (/intel|amd|nvidia|radeon|iris/i.test(renderer)) return "x64";
+    }
+  } catch {
+    /* default below */
+  }
+  return "arm";
 }
 
 /**
@@ -30,9 +51,12 @@ function detectPlatform(): Platform {
 export function LatestRelease() {
   const [latest, setLatest] = useState<Latest | null>(null);
   const [platform, setPlatform] = useState<Platform>("other");
+  const [macArch, setMacArch] = useState<MacArch>("arm");
 
   useEffect(() => {
-    setPlatform(detectPlatform());
+    const detected = detectPlatform();
+    setPlatform(detected);
+    if (detected === "mac") setMacArch(detectMacArch());
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 6000);
     fetch(LATEST_RELEASE_API, {
@@ -63,7 +87,7 @@ export function LatestRelease() {
           title: "Apple silicon",
           sub: [".dmg", latest.macArm.size].filter(Boolean).join(" · "),
           href: latest.macArm.href,
-          mine: platform === "mac",
+          mine: platform === "mac" && macArch === "arm",
           platform: "mac",
         },
         latest.macIntel && {
@@ -72,7 +96,7 @@ export function LatestRelease() {
           title: "Intel",
           sub: [".dmg", latest.macIntel.size].filter(Boolean).join(" · "),
           href: latest.macIntel.href,
-          mine: platform === "mac",
+          mine: platform === "mac" && macArch === "x64",
           platform: "mac",
         },
         latest.windows && {
