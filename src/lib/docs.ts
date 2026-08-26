@@ -160,6 +160,7 @@ export const DOCS: Doc[] = [
               "The key is stored only on this computer, in the OS credential store — Keychain on macOS, DPAPI on Windows. If that store is unavailable, the desk refuses to save it at all.",
               "A local model on your own machine is a custom bot with a local URL. Routing can prefer it: **Allow local models** — it costs nothing and never leaves the machine.",
               "Custom OpenAI-compatible support targets Chat Completions. The Responses API and Azure deployment routing are not implemented.",
+              "Grok Bot is one of the presets — a local shim with two connection paths of its own: [Connect Grok Bot](/docs/grok-bot).",
             ],
           },
         ],
@@ -171,6 +172,90 @@ export const DOCS: Doc[] = [
           {
             kind: "p",
             text: "OpenClaw and Hermes are **harnesses** — apps on this machine that carry their own agents; the desk can call those agents without owning them. **Settings → LLMs** shows whether each runtime is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name `openclaw/main` or `hermes/<profile>`; those tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. **Settings → LLMs → Install MCP** writes a restricted Workhorse server into OpenClaw's `mcp.servers` (and Hermes's `mcp_servers` if Hermes is installed) so those apps can list, read and ask chats, and spawn a Workhorse worker on a chat you pick. No token is stored.",
+          },
+        ],
+      },
+    ],
+  },
+
+{
+    slug: "grok-bot",
+    title: "Connect Grok Bot",
+    lead: "Two connections, one optional. Grok Bot calls the desk over Workhorse Link; instant replies let the desk wake Grok Bot.",
+    sections: [
+      {
+        id: "two-connections",
+        title: "Two connections",
+        blocks: [
+          {
+            kind: "table",
+            head: ["Connection", "What it does", "Required?"],
+            rows: [
+              ["Workhorse Link", "Lets Grok Bot call the desk through MCP or the `workhorse` command. The local watcher also carries queued Grok Bot messages.", "Yes, for Grok Bot to call the desk"],
+              ["Instant replies", "Lets the desk wake Grok Bot as soon as you send it a message.", "No. Finish it now or later."],
+            ],
+          },
+          {
+            kind: "p",
+            text: "You can use the first without ever setting up the second. The desk's own write-up is [GROK-BOT.md](https://github.com/go7studio/Go7-Workhorse/blob/main/docs/GROK-BOT.md); Link's contract is [LINK.md](https://github.com/go7studio/Go7-Workhorse/blob/main/docs/LINK.md).",
+          },
+        ],
+      },
+      {
+        id: "link",
+        title: "Workhorse Link and the watcher",
+        blocks: [
+          {
+            kind: "p",
+            text: "In the desk, open **Settings → LLMs → Workhorse Link** and choose **Connect Grok Bot**. It copies one set of launch and install instructions for this computer — paste them into Grok Bot once. That connects the MCP tools and the local `workhorse` command without adding another vendor or sharing a subscription. After that, Grok Bot can read and ask chats, check capacity, and delegate work; the watcher carries queued messages even when instant replies are not configured.",
+          },
+        ],
+      },
+      {
+        id: "instant",
+        title: "Instant chat: the webhook walkthrough",
+        blocks: [
+          {
+            kind: "video",
+            src: "/media/grok-bot-webhook",
+            poster: "/media/grok-bot-webhook-poster.webp",
+            width: 1212,
+            height: 1004,
+            alt: "Screen recording of Grok Bot: a bot is asked to create a routine named Workhorse that runs when a webhook fires; the Created routine line appears; the Routine panel opens with Active, Name, Instruction and When to run; the When a webhook fires chip opens to show POST to and key, and each field is selected and copied.",
+            caption: "The walkthrough, recorded as it ran: the bot builds the routine, the panel opens, and **POST to** + **key** are selected and copied. The key on screen is dead.",
+          },
+          {
+            kind: "ol",
+            items: [
+              "**Pick the bot.** In Grok Bot's sidebar, click the bot you are connecting.",
+              "**Let the bot build the routine.** Ask it for an active routine named Workhorse that runs when a webhook fires, answering pending desk requests through the `workhorse` command. When it lands, the chat shows a **Created routine · Workhorse** line. (You can also build it by hand: the panel at the top right, a new routine, and a webhook under **When to run**.)",
+              "**Open the routine.** Click the button at the top right of the window and pick the routine — the **Created routine** line in the chat opens the same panel.",
+              "**Check the toggle.** **Active**, at the top of the Routine panel, must be on.",
+              "**Open the webhook.** Under **When to run**, click **When a webhook fires**. It opens two fields: **POST to**, the webhook URL, and **key**.",
+              "**Copy both, carefully.** Click a field and it selects its whole value — copy it, then the other. The key is a secret: whoever holds the pair can fire this routine.",
+              "**Check the routine.** Click **Test run**; **Run history** shows the run with a check. An empty pending list is normal.",
+              "**Connect the desk.** Open **Settings → LLMs → Grok Bot → Finish instant chat**, paste **POST to** and **key**, and choose **Connect instant replies**.",
+            ],
+          },
+          {
+            kind: "p",
+            text: "The installed `workhorse` command validates every reply against a matching, still-pending request and writes it atomically — a routine cannot write an arbitrary inbox path or replace a different answer. If the pair ever stops working, the URL and key belong to that one webhook: delete the routine or re-add its webhook, then paste the fresh pair into the desk.",
+          },
+        ],
+      },
+      {
+        id: "bot-on-the-desk",
+        title: "Grok Bot as a bot on the desk",
+        blocks: [
+          {
+            kind: "ul",
+            items: [
+              "**Add a bot** ships a Grok Bot preset: a local OpenAI-compatible shim on `127.0.0.1`, model `grok-bot`. It is not Grok 4.6 — Grok over ACP stays a separate vendor with its own login, and Grok Bot is not a fifth stock vendor.",
+              "Each install mints its own loopback token; completions refuse any other caller, and the port binds loopback only. The connection fails closed when the shim is down.",
+              "Auto routing may call it to analyze and dispatch, but does not allocate it as an orchestration or builder worker.",
+              "Its weekly ring reads a leftover file Grok Bot itself keeps current; a missing, invalid, or older-than-30-minute reading stays unknown. The desk never writes that file.",
+              "The webhook pair lives in `grok-bot-wake.json` under the desk's own data folder — a different secret from the loopback token. Neither goes in git or in Grok Bot memory.",
+            ],
           },
         ],
       },

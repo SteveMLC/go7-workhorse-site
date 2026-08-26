@@ -90,6 +90,14 @@ export const FEATURE_SECTIONS: Section[] = [
       },
       {
         kind: "p",
+        text: "**Workhorse Link** is how any outside app calls this desk — Codex, Claude Code, Grok, Grok Bot, OpenClaw, Hermes, or any MCP client. Settings → LLMs → Workhorse Link connects each with one button, and every app gets the same versioned contract: read and ask chats, query leftover and availability, delegate work, continue it, and follow worker status. The same helper is a JSON CLI, `workhorse`, for a harness without MCP. Connecting an app adds no vendor, no login, and no Usage ring.",
+      },
+      {
+        kind: "p",
+        text: "**Grok Bot** connects in both directions. Over Link it calls the desk like any other app — and it rides on the desk as a bot of its own: a local shim on 127.0.0.1 with its own loopback token, its own weekly ring, and an optional instant-reply webhook so the desk can wake it. It is not a fifth stock vendor; Grok over ACP stays its own login. [Connect Grok Bot](/docs/grok-bot).",
+      },
+      {
+        kind: "p",
         text: "OpenClaw and Hermes are harnesses — apps on this machine that carry their own agents. The desk can call those agents without owning them. Settings → LLMs shows whether each is installed and lets you select its callable agents. A plan can grant selected agents for one wave (one round of workers), or you can name `openclaw/main` or `hermes/<profile>`; their tasks join the lineup beside the desk's own workers. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. A spawn that arrives without naming a chat makes a new one, titled from the prompt.",
       },
     ],
@@ -233,7 +241,7 @@ export const FEATURE_SECTIONS: Section[] = [
         items: [
           "**Skills** — two ship with the desk, `desk` for chat-to-chat control and `setup` for adding bots and references. Skills are also listed from Grok, Codex, Claude and Cursor homes, and can be pushed back to a vendor.",
           "**MCP servers** — attached to a runtime, with the same approval and result path as built-in tools.",
-          "**Custom bots** — a pasted URL and key become a first-class bot with its own name and colour. Testing the connection asks the provider which models it serves; large catalogs are grouped, frontier-first, searchable, and explicitly approved. One key keeps one leftover ring with separate model rows.",
+          "**Custom bots** — a pasted URL and key become a first-class bot with its own name and colour. Add a bot ships presets for MiniMax, Synthetic, OpenRouter, Groq, DeepSeek, Together, Fireworks, Hugging Face, Novita, Cerebras, AI/ML API, Vercel AI Gateway, Kimi Code, Gemini API, and Grok Bot, grouped as subscription plans, gateway credits, direct API billing, and on this Mac. Large catalogs are grouped, frontier-first, searchable, and explicitly approved. One key keeps one leftover ring with separate model rows.",
           "**The `/` palette** — new, project, link, model, effort, compact, plan, sandbox, usage, watch, schedule, goal, loop, skills, review, context, rewind, export, memory, hooks, plugins, workflows, and more.",
         ],
       },

@@ -108,8 +108,8 @@ describe("human pages beyond the door", () => {
 });
 
 describe("docs", () => {
-  it("are fourteen guides with unique kebab slugs, in a fixed reading order", () => {
-    assert.equal(DOCS.length, 14);
+  it("are fifteen guides with unique kebab slugs, in a fixed reading order", () => {
+    assert.equal(DOCS.length, 15);
     assert.equal(new Set(DOC_SLUGS).size, DOCS.length);
     for (const doc of DOCS) {
       assert.match(doc.slug, /^[a-z][a-z0-9-]*$/);
@@ -117,7 +117,7 @@ describe("docs", () => {
       assert.ok(doc.sections.length > 0 || doc.faq, `${doc.slug} has content`);
       assert.equal(new Set(doc.sections.map((s) => s.id)).size, doc.sections.length, `${doc.slug} section ids unique`);
     }
-    for (const slug of ["getting-started", "vendors", "commands", "privacy", "troubleshooting", "faq"]) {
+    for (const slug of ["getting-started", "vendors", "grok-bot", "commands", "privacy", "troubleshooting", "faq"]) {
       assert.ok(docBySlug(slug), `doc ${slug}`);
     }
     assert.equal(DOC_SLUGS[0], "getting-started");

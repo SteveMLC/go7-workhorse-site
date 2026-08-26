@@ -15,6 +15,8 @@ export const FEATURE_LIST: string[] = [
   "Schedules, goals that continue in rounds, loops from a bounded handoff, plans and subagents journalled and recovered after a restart",
   "Routing that can pick a bot and effort per message, or stay off",
   "Private learning memory in SQLite on your own disk; export or wipe it",
+  "Workhorse Link: one door for outside apps — Codex, Claude Code, Grok, Grok Bot, OpenClaw, Hermes, any MCP client — with a JSON CLI for the rest",
+  "Grok Bot both ways: a local shim bot with its own ring, and optional instant replies over a webhook",
   "Skills, MCP servers and a / palette",
   "Native window for Windows and macOS; updates from GitHub Releases; MIT",
 ];

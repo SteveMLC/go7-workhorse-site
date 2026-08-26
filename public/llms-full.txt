@@ -46,7 +46,7 @@ Logins, context, tools, leftover, and sandboxes never pool across vendors. Each 
 - Docs: https://go7workhorse.com/docs — Install Go7 Workhorse, connect the vendors you already pay for, read leftover, and see what stays on your machine. FAQ at https://go7workhorse.com/docs#faq. Data and privacy at https://go7workhorse.com/docs#privacy.
 - Download: https://go7workhorse.com/download — Go7 Workhorse for macOS (Apple silicon and Intel) and Windows. Installers come from GitHub Releases.
 - Changelog: https://go7workhorse.com/changelog — What changed in each Go7 Workhorse release, read from GitHub Releases.
-- Guides: https://go7workhorse.com/docs/getting-started, https://go7workhorse.com/docs/vendors, https://go7workhorse.com/docs/chats, https://go7workhorse.com/docs/control, https://go7workhorse.com/docs/spend, https://go7workhorse.com/docs/automation, https://go7workhorse.com/docs/memory, https://go7workhorse.com/docs/extending, https://go7workhorse.com/docs/commands, https://go7workhorse.com/docs/privacy, https://go7workhorse.com/docs/updates, https://go7workhorse.com/docs/troubleshooting, https://go7workhorse.com/docs/architecture, https://go7workhorse.com/docs/faq
+- Guides: https://go7workhorse.com/docs/getting-started, https://go7workhorse.com/docs/vendors, https://go7workhorse.com/docs/grok-bot, https://go7workhorse.com/docs/chats, https://go7workhorse.com/docs/control, https://go7workhorse.com/docs/spend, https://go7workhorse.com/docs/automation, https://go7workhorse.com/docs/memory, https://go7workhorse.com/docs/extending, https://go7workhorse.com/docs/commands, https://go7workhorse.com/docs/privacy, https://go7workhorse.com/docs/updates, https://go7workhorse.com/docs/troubleshooting, https://go7workhorse.com/docs/architecture, https://go7workhorse.com/docs/faq
 
 ## Docs
 
@@ -74,6 +74,10 @@ Not this product. There is no account with us and no server of ours. It is a nat
 
 No. Keep the subscriptions. Workhorse spends them. It does not replace a vendor.
 
+### "Can it work with Grok Bot?"
+
+Yes, in both directions. Over Workhorse Link, Grok Bot calls the desk — read and ask chats, check capacity, delegate. And Grok Bot rides on the desk as a local bot with its own weekly ring, plus optional instant replies over a webhook. Guide: https://go7workhorse.com/docs/grok-bot
+
 ### "Who is this for?"
 
 Do they hold more than one AI subscription or API key? If yes, this is built for them.
@@ -93,6 +97,8 @@ Cursor | ACP over stdio | Runs cursor-agent
 Custom | HTTP | Any Anthropic Messages or OpenAI Chat Completions endpoint, hosted or local
 Each vendor runs under its own login. Subscriptions, context and sandboxes are never pooled.
 [video: Chat settings in the desk: the Provider row switches through Codex, Grok, MiniMax M3, Cursor and Claude, and the list of available models changes with each one. — One chat, five bots. Switch the provider and the model list follows; approval behavior and file access sit on the same chat. MiniMax M3 in that list is a custom bot, added with a URL and a key.]
+Workhorse Link is how any outside app calls this desk — Codex, Claude Code, Grok, Grok Bot, OpenClaw, Hermes, or any MCP client. Settings → LLMs → Workhorse Link connects each with one button, and every app gets the same versioned contract: read and ask chats, query leftover and availability, delegate work, continue it, and follow worker status. The same helper is a JSON CLI, workhorse, for a harness without MCP. Connecting an app adds no vendor, no login, and no Usage ring.
+Grok Bot connects in both directions. Over Link it calls the desk like any other app — and it rides on the desk as a bot of its own: a local shim on 127.0.0.1 with its own loopback token, its own weekly ring, and an optional instant-reply webhook so the desk can wake it. It is not a fifth stock vendor; Grok over ACP stays its own login. Connect Grok Bot (/docs/grok-bot).
 OpenClaw and Hermes are harnesses — apps on this machine that carry their own agents. The desk can call those agents without owning them. Settings → LLMs shows whether each is installed and lets you select its callable agents. A plan can grant selected agents for one wave (one round of workers), or you can name openclaw/main or hermes/<profile>; their tasks join the lineup beside the desk's own workers. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. A spawn that arrives without naming a chat makes a new one, titled from the prompt.
 
 ### Chats and projects
@@ -162,7 +168,7 @@ A chat can also read media the agent wrote, so a generated image shows in the tr
 
 - Skills — two ship with the desk, desk for chat-to-chat control and setup for adding bots and references. Skills are also listed from Grok, Codex, Claude and Cursor homes, and can be pushed back to a vendor.
 - MCP servers — attached to a runtime, with the same approval and result path as built-in tools.
-- Custom bots — a pasted URL and key become a first-class bot with its own name and colour. Testing the connection asks the provider which models it serves; large catalogs are grouped, frontier-first, searchable, and explicitly approved. One key keeps one leftover ring with separate model rows.
+- Custom bots — a pasted URL and key become a first-class bot with its own name and colour. Add a bot ships presets for MiniMax, Synthetic, OpenRouter, Groq, DeepSeek, Together, Fireworks, Hugging Face, Novita, Cerebras, AI/ML API, Vercel AI Gateway, Kimi Code, Gemini API, and Grok Bot, grouped as subscription plans, gateway credits, direct API billing, and on this Mac. Large catalogs are grouped, frontier-first, searchable, and explicitly approved. One key keeps one leftover ring with separate model rows.
 - The / palette — new, project, link, model, effort, compact, plan, sandbox, usage, watch, schedule, goal, loop, skills, review, context, rewind, export, memory, hooks, plugins, workflows, and more.
 
 ### Settings
@@ -242,10 +248,47 @@ Add a bot → Your own. Give it a Bot name, a Provider (Anthropic Messages or Op
 - The key is stored only on this computer, in the OS credential store — Keychain on macOS, DPAPI on Windows. If that store is unavailable, the desk refuses to save it at all.
 - A local model on your own machine is a custom bot with a local URL. Routing can prefer it: Allow local models — it costs nothing and never leaves the machine.
 - Custom OpenAI-compatible support targets Chat Completions. The Responses API and Azure deployment routing are not implemented.
+- Grok Bot is one of the presets — a local shim with two connection paths of its own: Connect Grok Bot (/docs/grok-bot).
 
 #### OpenClaw and Hermes
 
 OpenClaw and Hermes are harnesses — apps on this machine that carry their own agents; the desk can call those agents without owning them. Settings → LLMs shows whether each runtime is installed and lets you select its callable agents. A plan can grant selected agents for one wave, or you can name openclaw/main or hermes/<profile>; those tasks join the lineup. They get no Usage ring, and delete, rename, credentials and elevate stay blocked. Settings → LLMs → Install MCP writes a restricted Workhorse server into OpenClaw's mcp.servers (and Hermes's mcp_servers if Hermes is installed) so those apps can list, read and ask chats, and spawn a Workhorse worker on a chat you pick. No token is stored.
+
+### Connect Grok Bot — https://go7workhorse.com/docs/grok-bot
+
+Two connections, one optional. Grok Bot calls the desk over Workhorse Link; instant replies let the desk wake Grok Bot.
+
+#### Two connections
+
+Connection | What it does | Required?
+Workhorse Link | Lets Grok Bot call the desk through MCP or the workhorse command. The local watcher also carries queued Grok Bot messages. | Yes, for Grok Bot to call the desk
+Instant replies | Lets the desk wake Grok Bot as soon as you send it a message. | No. Finish it now or later.
+You can use the first without ever setting up the second. The desk's own write-up is GROK-BOT.md (https://github.com/go7studio/Go7-Workhorse/blob/main/docs/GROK-BOT.md); Link's contract is LINK.md (https://github.com/go7studio/Go7-Workhorse/blob/main/docs/LINK.md).
+
+#### Workhorse Link and the watcher
+
+In the desk, open Settings → LLMs → Workhorse Link and choose Connect Grok Bot. It copies one set of launch and install instructions for this computer — paste them into Grok Bot once. That connects the MCP tools and the local workhorse command without adding another vendor or sharing a subscription. After that, Grok Bot can read and ask chats, check capacity, and delegate work; the watcher carries queued messages even when instant replies are not configured.
+
+#### Instant chat: the webhook walkthrough
+
+[video: Screen recording of Grok Bot: a bot is asked to create a routine named Workhorse that runs when a webhook fires; the Created routine line appears; the Routine panel opens with Active, Name, Instruction and When to run; the When a webhook fires chip opens to show POST to and key, and each field is selected and copied. — The walkthrough, recorded as it ran: the bot builds the routine, the panel opens, and POST to + key are selected and copied. The key on screen is dead.]
+1. Pick the bot. In Grok Bot's sidebar, click the bot you are connecting.
+2. Let the bot build the routine. Ask it for an active routine named Workhorse that runs when a webhook fires, answering pending desk requests through the workhorse command. When it lands, the chat shows a Created routine · Workhorse line. (You can also build it by hand: the panel at the top right, a new routine, and a webhook under When to run.)
+3. Open the routine. Click the button at the top right of the window and pick the routine — the Created routine line in the chat opens the same panel.
+4. Check the toggle. Active, at the top of the Routine panel, must be on.
+5. Open the webhook. Under When to run, click When a webhook fires. It opens two fields: POST to, the webhook URL, and key.
+6. Copy both, carefully. Click a field and it selects its whole value — copy it, then the other. The key is a secret: whoever holds the pair can fire this routine.
+7. Check the routine. Click Test run; Run history shows the run with a check. An empty pending list is normal.
+8. Connect the desk. Open Settings → LLMs → Grok Bot → Finish instant chat, paste POST to and key, and choose Connect instant replies.
+The installed workhorse command validates every reply against a matching, still-pending request and writes it atomically — a routine cannot write an arbitrary inbox path or replace a different answer. If the pair ever stops working, the URL and key belong to that one webhook: delete the routine or re-add its webhook, then paste the fresh pair into the desk.
+
+#### Grok Bot as a bot on the desk
+
+- Add a bot ships a Grok Bot preset: a local OpenAI-compatible shim on 127.0.0.1, model grok-bot. It is not Grok 4.6 — Grok over ACP stays a separate vendor with its own login, and Grok Bot is not a fifth stock vendor.
+- Each install mints its own loopback token; completions refuse any other caller, and the port binds loopback only. The connection fails closed when the shim is down.
+- Auto routing may call it to analyze and dispatch, but does not allocate it as an orchestration or builder worker.
+- Its weekly ring reads a leftover file Grok Bot itself keeps current; a missing, invalid, or older-than-30-minute reading stays unknown. The desk never writes that file.
+- The webhook pair lives in grok-bot-wake.json under the desk's own data folder — a different secret from the loopback token. Neither goes in git or in Grok Bot memory.
 
 ### Projects and chats — https://go7workhorse.com/docs/chats
 

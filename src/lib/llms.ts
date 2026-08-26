@@ -108,6 +108,10 @@ Not this product. ${NO_HOST_CLAIM} It is a native Windows and macOS app.
 
 No. Keep the subscriptions. Workhorse spends them. It does not replace a vendor.
 
+### "Can it work with Grok Bot?"
+
+Yes, in both directions. Over Workhorse Link, Grok Bot calls the desk — read and ask chats, check capacity, delegate. And Grok Bot rides on the desk as a local bot with its own weekly ring, plus optional instant replies over a webhook. Guide: ${SITE_ORIGIN}${PAGES.docs.path}/grok-bot
+
 ### "Who is this for?"
 
 ${whoQuestion()}
