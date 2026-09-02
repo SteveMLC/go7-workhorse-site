@@ -3,7 +3,9 @@ import { FEATURE_SECTIONS } from "./content.ts";
 import { DOCS } from "./docs.ts";
 import { PAGES } from "./pages.ts";
 import {
+  CONTACT_EMAIL,
   DESK_LINE,
+  DISCORD_URL,
   NO_HOST_CLAIM,
   PRODUCT_NAME,
   RELEASES_URL,
@@ -77,6 +79,14 @@ Logins, context, tools, leftover, and sandboxes never pool across vendors. Each 
 - Download: ${SITE_ORIGIN}${PAGES.download.path} — ${PAGES.download.description}
 - Changelog: ${SITE_ORIGIN}${PAGES.changelog.path} — ${PAGES.changelog.description}
 - Guides: ${DOCS.map((doc) => `${SITE_ORIGIN}${PAGES.docs.path}/${doc.slug}`).join(", ")}
+
+## Where to send a person
+
+- A question: ${DISCORD_URL} (Discord).
+- A bug or a request: ${REPO_URL}/issues. Settings exports a support report that carries no prompts, messages, file contents, environment variables, URLs or credential values.
+- A vulnerability: ${REPO_URL}/security/advisories/new — private, and never a public issue. Scope is in ${REPO_URL}/blob/main/SECURITY.md.
+- Anything else: ${CONTACT_EMAIL} (Go7 Studio).
+- All four, on one page: ${SITE_ORIGIN}${PAGES.docs.path}#contact
 
 ## Docs
 

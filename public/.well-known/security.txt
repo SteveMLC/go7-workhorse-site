@@ -1,0 +1,9 @@
+# Go7 Workhorse runs on your machine under your own vendor logins.
+# What is in scope, and what the desk assumes, is in the policy below.
+
+Contact: https://github.com/go7studio/Go7-Workhorse/security/advisories/new
+Contact: mailto:hello@go7studio.com
+Expires: 2027-09-02T16:47:11Z
+Policy: https://github.com/go7studio/Go7-Workhorse/blob/main/SECURITY.md
+Preferred-Languages: en
+Canonical: https://go7workhorse.com/.well-known/security.txt

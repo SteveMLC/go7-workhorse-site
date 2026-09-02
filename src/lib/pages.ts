@@ -43,6 +43,8 @@ export const README_URL = `${REPO_URL}/blob/main/README.md`;
 export const FEATURES_MD_URL = `${REPO_URL}/blob/main/docs/FEATURES.md`;
 export const CONTRIBUTING_URL = `${REPO_URL}/blob/main/CONTRIBUTING.md`;
 export const RELEASES_INDEX_URL = `${REPO_URL}/releases`;
+export const SECURITY_MD_URL = `${REPO_URL}/blob/main/SECURITY.md`;
+export const SECURITY_ADVISORY_URL = `${REPO_URL}/security/advisories/new`;
 export const MAC_INSTALL_SCRIPT =
   "curl -fsSL https://raw.githubusercontent.com/go7studio/Go7-Workhorse/main/scripts/install-mac.sh | bash";
 
@@ -68,6 +70,7 @@ export const FOOTER_LINKS: readonly SiteLink[] = [
   { href: REPO_URL, label: "Public repo", analyticsEvent: REPO_CLICK_EVENT },
   { href: GO7STUDIO_URL, label: "go7studio.com" },
   { href: DISCORD_URL, label: "Discord" },
+  { href: `${PAGES.docs.path}#contact`, label: "Contact" },
   { href: "/llms.txt", label: "llms.txt", analyticsEvent: LLMS_TXT_CLICK_EVENT },
 ];
 

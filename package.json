@@ -5,12 +5,12 @@
   "description": "Product page for Go7 Workhorse \u2014 one desk, every subscription stays its own.",
   "scripts": {
     "dev": "next dev",
-    "prebuild": "tsx scripts/write-llms.ts",
+    "prebuild": "tsx scripts/write-llms.ts && tsx scripts/write-security-txt.ts",
     "build": "next build",
     "start": "next start",
     "llms": "tsx scripts/write-llms.ts",
     "monitor": "tsx scripts/live-monitor.ts",
-    "test": "tsx scripts/write-llms.ts && tsx --test src/lib/site.test.ts src/lib/analytics.test.ts src/lib/llms.test.ts src/lib/monitor.test.ts src/lib/content.test.ts",
+    "test": "tsx scripts/write-llms.ts && tsx scripts/write-security-txt.ts && tsx --test src/lib/site.test.ts src/lib/analytics.test.ts src/lib/llms.test.ts src/lib/monitor.test.ts src/lib/content.test.ts",
     "footage:seed": "node scripts/footage/seed.js",
     "footage:bots": "node scripts/footage/setup-bots.js",
     "footage:fanout": "node scripts/footage/record-fanout.js"

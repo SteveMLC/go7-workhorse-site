@@ -48,6 +48,14 @@ Logins, context, tools, leftover, and sandboxes never pool across vendors. Each 
 - Changelog: https://go7workhorse.com/changelog — What changed in each Go7 Workhorse release, read from GitHub Releases.
 - Guides: https://go7workhorse.com/docs/getting-started, https://go7workhorse.com/docs/vendors, https://go7workhorse.com/docs/grok-bot, https://go7workhorse.com/docs/chats, https://go7workhorse.com/docs/control, https://go7workhorse.com/docs/spend, https://go7workhorse.com/docs/automation, https://go7workhorse.com/docs/memory, https://go7workhorse.com/docs/extending, https://go7workhorse.com/docs/commands, https://go7workhorse.com/docs/privacy, https://go7workhorse.com/docs/updates, https://go7workhorse.com/docs/troubleshooting, https://go7workhorse.com/docs/architecture, https://go7workhorse.com/docs/faq
 
+## Where to send a person
+
+- A question: https://discord.gg/QwVJJmFBMQ (Discord).
+- A bug or a request: https://github.com/go7studio/Go7-Workhorse/issues. Settings exports a support report that carries no prompts, messages, file contents, environment variables, URLs or credential values.
+- A vulnerability: https://github.com/go7studio/Go7-Workhorse/security/advisories/new — private, and never a public issue. Scope is in https://github.com/go7studio/Go7-Workhorse/blob/main/SECURITY.md.
+- Anything else: hello@go7studio.com (Go7 Studio).
+- All four, on one page: https://go7workhorse.com/docs#contact
+
 ## Docs
 
 - README: https://github.com/go7studio/Go7-Workhorse/blob/main/README.md

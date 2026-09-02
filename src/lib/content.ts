@@ -5,7 +5,8 @@
  *
  * Inline marks in strings: `code`, **strong**, [text](href). Nothing else.
  */
-import { MAC_INSTALL_SCRIPT } from "./pages.ts";
+import { ISSUES_URL, MAC_INSTALL_SCRIPT, SECURITY_ADVISORY_URL, SECURITY_MD_URL } from "./pages.ts";
+import { CONTACT_EMAIL, DISCORD_URL } from "./site.ts";
 
 export type Fact = { title: string; body: string };
 
@@ -316,6 +317,38 @@ export const FAQ: Faq[] = [
   {
     q: "How do updates arrive?",
     a: "Settings → Profile checks GitHub for a newer desk, and a blue update control appears at the far right of Settings when one is ready. On a Mac the installer downloads that release's disk image, replaces the app, and opens it. On Windows it downloads the Setup exe, installs after Workhorse quits, and opens the new build. Projects, chats and the encrypted vault carry across.",
+  },
+];
+
+/* ---------- contact ---------- */
+
+export type ContactRoute = { need: string; where: string; href: string; note: string };
+
+/** Four doors, by what the person needs. No form: this site has no server. */
+export const CONTACT_ROUTES: ContactRoute[] = [
+  {
+    need: "Ask a question",
+    where: "Discord",
+    href: DISCORD_URL,
+    note: "The fastest answer, from people using the desk.",
+  },
+  {
+    need: "Report a bug, ask for something",
+    where: "GitHub issues",
+    href: ISSUES_URL,
+    note: "Public and tracked. Settings can export a support report that carries no prompts, messages, file contents, environment variables, URLs or credential values.",
+  },
+  {
+    need: "Report a vulnerability",
+    where: "Security advisory",
+    href: SECURITY_ADVISORY_URL,
+    note: "Private, and read first. Please do not open a public issue for a vulnerability. What is in scope is in [SECURITY.md](" + SECURITY_MD_URL + ").",
+  },
+  {
+    need: "Anything else",
+    where: CONTACT_EMAIL,
+    href: `mailto:${CONTACT_EMAIL}`,
+    note: "Go7 Studio. For work that is not a bug and not a question in public.",
   },
 ];
 

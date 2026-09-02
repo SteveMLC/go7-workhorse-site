@@ -16,7 +16,10 @@ import {
   README_URL,
   RELEASES_INDEX_URL,
   RELEASES_URL,
+  SECURITY_ADVISORY_URL,
+  SECURITY_MD_URL,
 } from "./pages.ts";
+import { DISCORD_URL } from "./site.ts";
 
 export type Doc = {
   slug: string;
@@ -764,6 +767,10 @@ export const DOCS: Doc[] = [
             kind: "p",
             text: "Settings can export a support-safe report. It excludes prompts, messages, file contents, environment variables, URLs and credential values.",
           },
+          {
+            kind: "p",
+            text: `**Found a hole?** [SECURITY.md](${SECURITY_MD_URL}) says what the desk assumes, where the boundaries are, and what counts as in scope. Report it privately through a [security advisory](${SECURITY_ADVISORY_URL}) — please not a public issue.`,
+          },
         ],
       },
       {
@@ -878,7 +885,7 @@ export const DOCS: Doc[] = [
         blocks: [
           {
             kind: "p",
-            text: `Export the support report from Settings — it excludes prompts, messages, file contents, environment variables, URLs and credential values — and open an [issue](${ISSUES_URL}) with it.`,
+            text: `Export the support report from Settings — it excludes prompts, messages, file contents, environment variables, URLs and credential values — and open an [issue](${ISSUES_URL}) with it. A question rather than a bug is faster in [Discord](${DISCORD_URL}); a vulnerability goes to a private [security advisory](${SECURITY_ADVISORY_URL}), never a public issue.`,
           },
         ],
       },

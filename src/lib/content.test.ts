@@ -5,7 +5,8 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 import { dedupeItems, notesToBlocks, parseReleases } from "./changelog.ts";
 import type { Block } from "./content.ts";
-import { DOWNLOAD_STEPS, FAQ, FEATURE_SECTIONS, HOME_FACTS } from "./content.ts";
+import { CONTACT_ROUTES, DOWNLOAD_STEPS, FAQ, FEATURE_SECTIONS, HOME_FACTS } from "./content.ts";
+import { expiresAt, securityTxt } from "./security-txt.ts";
 import { DESK_COMMANDS } from "./desk-commands.ts";
 import { DOCS, DOC_SLUGS, docBySlug, docNeighbours } from "./docs.ts";
 import { blocksToText, plainText } from "./llms.ts";
@@ -13,7 +14,7 @@ import { FOOTER_LINKS, NAV_LINKS, PAGES, metadataFor, pageMetadata } from "./pag
 import { formatDate, formatSize, parseLatestRelease } from "./release.ts";
 import { FEATURE_LIST } from "./feature-list.ts";
 import { breadcrumbLd, docsIndexLd, faqLd, organizationLd, techArticleLd, webSiteLd } from "./schema.ts";
-import { DISCORD_URL, PRODUCT_NAME, RELEASES_URL, REPO_URL, softwareApplicationJsonLd } from "./site.ts";
+import { CONTACT_EMAIL, DISCORD_URL, PRODUCT_NAME, RELEASES_URL, REPO_URL, softwareApplicationJsonLd } from "./site.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const appDir = join(here, "../app");
@@ -236,10 +237,16 @@ describe("routes, nav and footer", () => {
   it("every internal link points at a page that exists", () => {
     const internal = [...NAV_LINKS, ...FOOTER_LINKS]
       .map((link) => link.href)
-      .filter((href) => href.startsWith("/") && !href.startsWith("/llms"));
+      .filter((href) => href.startsWith("/") && !href.startsWith("/llms") && !href.startsWith("/."));
     for (const href of internal) {
-      const dir = href === "/" ? appDir : join(appDir, href.slice(1));
-      assert.ok(existsSync(join(dir, "page.tsx")), `page for ${href}`);
+      const [path, hash] = href.split("#");
+      const dir = path === "/" ? appDir : join(appDir, path.slice(1));
+      const page = join(dir, "page.tsx");
+      assert.ok(existsSync(page), `page for ${path}`);
+      // A link to an anchor is only good if the page actually renders that id.
+      if (hash) {
+        assert.match(readFileSync(page, "utf8"), new RegExp(`id="${hash}"`), `${path} renders #${hash}`);
+      }
     }
     for (const page of Object.values(PAGES)) {
       const dir = page.path === "/" ? appDir : join(appDir, page.path.slice(1));
@@ -277,6 +284,56 @@ describe("routes, nav and footer", () => {
       assert.ok(llms.includes(`https://go7workhorse.com${PAGES[key].path}`), `llms lists ${key}`);
     }
     assert.match(sitemap, /DOCS\.map/);
+  });
+});
+
+describe("contact and security", () => {
+  it("routes four needs, each to a reachable door", () => {
+    assert.equal(CONTACT_ROUTES.length, 4);
+    const hrefs = CONTACT_ROUTES.map((route) => route.href);
+    assert.ok(hrefs.some((href) => href.startsWith("https://discord.gg/")), "Discord");
+    assert.ok(hrefs.includes(`${REPO_URL}/issues`), "GitHub issues");
+    assert.ok(hrefs.includes(`${REPO_URL}/security/advisories/new`), "private advisory");
+    assert.ok(hrefs.includes(`mailto:${CONTACT_EMAIL}`), "email");
+    for (const route of CONTACT_ROUTES) {
+      assert.ok(route.need.length > 3 && route.note.length > 20, route.where);
+      assert.match(route.href, /^(https:\/\/|mailto:)/);
+    }
+    // The vulnerability route must say "not a public issue" somewhere in its note.
+    const advisory = CONTACT_ROUTES.find((route) => route.href.includes("/security/advisories/"));
+    assert.match(advisory.note, /not open a public issue/i);
+  });
+
+  it("keeps the contact block and the footer link pointing at each other", () => {
+    const page = readFileSync(join(appDir, "docs/page.tsx"), "utf8");
+    assert.match(page, /id="contact"/);
+    assert.match(page, /CONTACT_ROUTES/);
+    assert.ok(FOOTER_LINKS.some((link) => link.href === "/docs#contact"), "footer Contact link");
+  });
+
+  it("writes a valid, unexpired security.txt", () => {
+    const now = new Date();
+    const text = securityTxt(now);
+    for (const field of ["Contact:", "Expires:", "Policy:", "Canonical:"]) {
+      assert.ok(text.includes(field), `security.txt has ${field}`);
+    }
+    // RFC 9116: Expires must be in the future, and no more than a year out.
+    const expires = new Date(expiresAt(now));
+    assert.ok(expires.getTime() > now.getTime(), "not already expired");
+    assert.ok(expires.getTime() - now.getTime() <= 366 * 24 * 3600 * 1000, "within a year");
+    assert.match(text, /^Contact: https:\/\/github\.com\/go7studio\/Go7-Workhorse\/security\/advisories\/new$/m);
+    // The published file must match what the builder writes, ignoring the date.
+    const onDisk = readFileSync(join(here, "../../public/.well-known/security.txt"), "utf8");
+    const strip = (value) => value.replace(/^Expires:.*$/m, "");
+    assert.equal(strip(onDisk), strip(text));
+  });
+
+  it("tells an agent where to send a person", () => {
+    const brief = readFileSync(join(here, "../../public/llms.txt"), "utf8");
+    assert.match(brief, /Where to send a person/);
+    assert.match(brief, /security\/advisories\/new/);
+    assert.ok(brief.includes(CONTACT_EMAIL));
+    assert.ok(brief.includes(DISCORD_URL));
   });
 });
 

@@ -4,6 +4,8 @@ import { JsonLd } from "@/components/JsonLd";
 import { PageHero } from "@/components/PageHero";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteNav } from "@/components/SiteNav";
+import { Inline } from "@/components/Inline";
+import { CONTACT_ROUTES } from "@/lib/content";
 import { DOCS } from "@/lib/docs";
 import { PAGES, pageMetadata } from "@/lib/pages";
 import { breadcrumbLd, docsIndexLd, webPageLd } from "@/lib/schema";
@@ -45,9 +47,28 @@ export default function DocsIndexPage() {
           ))}
         </ol>
 
-        <p className="prose-note center">
-          Something missing? The <a href={REPO_URL}>public repo</a> has the README, every release, and an issue tracker.
-        </p>
+        <section className="contact" id="contact" aria-labelledby="contact-title">
+          <h2 id="contact-title" className="section-title">
+            Get in touch.
+          </h2>
+          <ul className="contact-list">
+            {CONTACT_ROUTES.map((route) => (
+              <li key={route.where}>
+                <span className="contact-need">{route.need}</span>
+                <a className="contact-where" href={route.href}>
+                  {route.where}
+                  <span aria-hidden="true">›</span>
+                </a>
+                <span className="contact-note">
+                  <Inline text={route.note} />
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="prose-note center">
+            Something missing? The <a href={REPO_URL}>public repo</a> has the README, every release, and an issue tracker.
+          </p>
+        </section>
 
         <section className="outro" aria-labelledby="outro-title">
           <h2 id="outro-title" className="outro-title">
