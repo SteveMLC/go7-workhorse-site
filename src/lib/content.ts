@@ -49,7 +49,7 @@ export const HOME_FACTS: Fact[] = [
   },
   {
     title: "Private by design.",
-    body: "Keys live in the OS credential store. Memory is a SQLite file on your disk you can export or wipe. It sends no analytics.",
+    body: "Keys live in the OS credential store. Memory is a SQLite file on your disk you can export or wipe. The app sends no analytics.",
   },
 ];
 
@@ -300,7 +300,7 @@ export const FAQ: Faq[] = [
   },
   {
     q: "What does it send, and where?",
-    a: "It talks to the vendors you connect, including their usage endpoints for the meters, and to GitHub to check for a newer release. It sends no analytics.",
+    a: "It talks to the vendors you connect, including their usage endpoints for the meters, and to GitHub to check for a newer release. The app sends no analytics.",
   },
   {
     q: "Where are my API keys kept?",
