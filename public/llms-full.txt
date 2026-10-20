@@ -232,7 +232,7 @@ Each vendor runs through its own CLI, under the login you already hold. Nothing 
 Vendor CLIs are not bundled. Install the one you use, sign in to it as you normally do, and the desk runs it as its own process under that login. Settings → LLMs → Add bot opens Add a bot, which lists what the desk can see — Local Grok Build, Local Claude Code, Local Codex, Local Cursor Agent — each with a state: Ready on the desk, Installed — sign in with agent login, Needs auth, or Not found.
 Vendor | What runs | Protocol | Notes
 Grok | the local Grok CLI, grok agent stdio | ACP over stdio | Your Grok plan
-Claude | the local Claude Code CLI | ACP over stdio | Your Claude plan
+Claude | the local Claude Code CLI | ACP over stdio | Your own Claude Code, under your own Claude login
 Codex | the local Codex CLI | ACP, plus an App Server when the CLI has one | The App Server adds native history and capability discovery
 Cursor | cursor-agent, the Cursor CLI | ACP over stdio | Needs the Cursor Agent CLI, not the editor app. Your Cursor login.
 Custom | an HTTP endpoint you name | Anthropic Messages or OpenAI Chat Completions | Hosted, or on your own machine
@@ -537,7 +537,7 @@ Where things live, what it talks to, and what never leaves the machine.
 
 - The vendors you connect, including their usage endpoints for the meters.
 - GitHub, to check for a newer release.
-- Nothing else. It sends no analytics.
+- Nothing else. The app sends no analytics.
 - There is no account with us and no server of ours. Each vendor runs through its own CLI or API under your own login; nothing is pooled, proxied or shared between vendors.
 
 #### Support report
@@ -629,7 +629,7 @@ Short answers to the questions that come up first.
 - Q: What does it cost?
   A: The desk is open source under MIT, and the installers are on GitHub. Your subscriptions stay yours; the desk spends leftover you already bought.
 - Q: What does it send, and where?
-  A: It talks to the vendors you connect, including their usage endpoints for the meters, and to GitHub to check for a newer release. It sends no analytics.
+  A: It talks to the vendors you connect, including their usage endpoints for the meters, and to GitHub to check for a newer release. The app sends no analytics.
 - Q: Where are my API keys kept?
   A: In the OS credential store — Keychain on macOS, DPAPI on Windows — never in plain text. If that store is unavailable the desk refuses to save the key.
 - Q: How do meters work when a vendor has none?

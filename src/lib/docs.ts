@@ -114,7 +114,7 @@ export const DOCS: Doc[] = [
             head: ["Vendor", "What runs", "Protocol", "Notes"],
             rows: [
               ["Grok", "the local Grok CLI, `grok agent stdio`", "ACP over stdio", "Your Grok plan"],
-              ["Claude", "the local Claude Code CLI", "ACP over stdio", "Your Claude plan"],
+              ["Claude", "the local Claude Code CLI", "ACP over stdio", "Your own Claude Code, under your own Claude login"],
               ["Codex", "the local Codex CLI", "ACP, plus an App Server when the CLI has one", "The App Server adds native history and capability discovery"],
               ["Cursor", "`cursor-agent`, the Cursor CLI", "ACP over stdio", "Needs the Cursor Agent CLI, not the editor app. Your Cursor login."],
               ["Custom", "an HTTP endpoint you name", "Anthropic Messages or OpenAI Chat Completions", "Hosted, or on your own machine"],
@@ -753,7 +753,7 @@ export const DOCS: Doc[] = [
             items: [
               "The vendors you connect, including their usage endpoints for the meters.",
               "GitHub, to check for a newer release.",
-              "Nothing else. It sends no analytics.",
+              "Nothing else. The app sends no analytics.",
               "There is no account with us and no server of ours. Each vendor runs through its own CLI or API under your own login; nothing is pooled, proxied or shared between vendors.",
             ],
           },
